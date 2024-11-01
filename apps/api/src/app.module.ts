@@ -1,28 +1,37 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-// import { UserModule } from './user/user.module';
-import { ProductModule } from './product/product.module';
-import {Product} from "./product/entities/product.entity";
+import {Module} from '@nestjs/common';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {ConfigModule, ConfigService} from '@nestjs/config';
+import {AppController} from './app.controller';
+import {AppService} from './app.service';
+import {ProductModule} from './product/product.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      password: 'collert',
-      username: 'postgres',
-      entities: [Product],
-      database: 'next15-nest-plush-commerce',
-      synchronize: true,
-      logging: true,
+    ConfigModule.forRoot({
+      envFilePath: ['.env', '.env.local', '.env.production'],  // Specify the path to your .env file
+      isGlobal: true,       // Makes the config available globally
     }),
-    // UserModule,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USER'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_NAME'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        ssl: {
+          rejectUnauthorized: false, // Consider enabling in production
+        },
+        synchronize: true, // Disable in production
+      }),
+    }),
     ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+}

@@ -9,26 +9,36 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const config_1 = require("@nestjs/config");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const product_module_1 = require("./product/product.module");
-const product_entity_1 = require("./product/entities/product.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forRoot({
-                type: 'postgres',
-                host: 'localhost',
-                port: 5432,
-                password: 'collert',
-                username: 'postgres',
-                entities: [product_entity_1.Product],
-                database: 'next15-nest-plush-commerce',
-                synchronize: true,
-                logging: true,
+            config_1.ConfigModule.forRoot({
+                envFilePath: ['.env', '.env.local', '.env.production'],
+                isGlobal: true,
+            }),
+            typeorm_1.TypeOrmModule.forRootAsync({
+                imports: [config_1.ConfigModule],
+                inject: [config_1.ConfigService],
+                useFactory: (configService) => ({
+                    type: 'postgres',
+                    host: configService.get('DB_HOST'),
+                    port: configService.get('DB_PORT'),
+                    username: configService.get('DB_USER'),
+                    password: configService.get('DB_PASSWORD'),
+                    database: configService.get('DB_NAME'),
+                    entities: [__dirname + '/**/*.entity{.ts,.js}'],
+                    ssl: {
+                        rejectUnauthorized: false,
+                    },
+                    synchronize: true,
+                }),
             }),
             product_module_1.ProductModule,
         ],

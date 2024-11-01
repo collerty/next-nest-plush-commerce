@@ -1,15 +1,16 @@
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent,  CardFooter, CardHeader} from "@/components/ui/card";
 
 export default async function Home() {
   const data = await fetch("http://localhost:4000/product");
   const products = await data.json();
-  console.log(products);
+  // console.log(products);
   return (
       <div className="w-full h-full flex flex-col">
         <div className="flex">
-          {products.map((product) => {
+          // eslint-disable-next-lin
+          {products.map((product:any) => {
             return (
-                <Card>
+                <Card key={product.id}>
                   {/*<CardTitle>{product.name}</CardTitle>*/}
                   <CardHeader>{product.id}</CardHeader>
                   <CardContent>{product.name}</CardContent>
