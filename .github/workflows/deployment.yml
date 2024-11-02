@@ -11,13 +11,17 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3  # Check out the code from the repository.
 
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+
       - name: Build Docker Images
         run: |
-          docker-compose up -d --build  # Build and start the services defined in docker-compose.yml.
+          docker compose up -d --build  # Build and start the services defined in docker-compose.yml.
 
       - name: Build Application
         run: |
-          docker-compose exec -T service yarn build  # Build the application inside the specified Docker container.
+          docker compose exec -T service yarn build  # Build the application inside the specified Docker container.
 
   deploy:
     needs: build  # This job depends on the build job.
@@ -40,9 +44,9 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i private_key ${USERNAME}@${HOSTNAME} '
             cd /next-nest-plush-commerce/apps/api &&
-            git checkout main &&  # Ensure you're on the main branch.
-            git fetch --all &&  # Fetch all branches and updates from the remote.
-            git reset --hard origin/main &&  # Reset the current branch to match the remote.
-            git pull origin main &&  # Pull the latest changes from the main branch.
-            docker compose up -d --build  # Rebuild and start the containers.
+            git checkout main &&  
+            git fetch --all && 
+            git reset --hard origin/main && 
+            git pull origin main &&  
+            docker compose up -d --build 
           '
