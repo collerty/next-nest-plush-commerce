@@ -17,25 +17,27 @@ jobs:
 
       - name: Build Docker Images
         run: |
-          docker compose up -d --build  # Build and start the services defined in docker-compose.yml.
+          cd apps/api
+          docker compose up -d --build
 
       - name: Build Application
         run: |
-          docker compose exec -T service yarn build  # Build the application inside the specified Docker container.
+          cd apps/api
+          docker compose exec -T service yarn build
 
   deploy:
-    needs: build  # This job depends on the build job.
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3  # Check out the code from the repository again.
+        uses: actions/checkout@v3
 
       - name: Setup SSH Key
         env:
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
         run: |
-          echo "$PRIVATE_KEY" > private_key  # Save the private key to a file.
-          chmod 600 private_key  # Ensure the private key has the right permissions.
+          echo "$PRIVATE_KEY" > private_key
+          chmod 600 private_key
 
       - name: Deploy Application
         env:
