@@ -2,7 +2,7 @@ name: Fancy Deployment
 
 on:
   push:
-    branches: [master]  # This triggers the workflow on pushes to the master branch.
+    branches: [main]  # This triggers the workflow on pushes to the master branch.
 
 jobs:
   build:
