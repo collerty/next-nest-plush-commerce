@@ -20,7 +20,7 @@ RUN bun install
 COPY . .
 
 # Copy the .env file if you have it
-COPY .env ./
+#COPY .env ./
 
 # Creates a "dist" folder with the production build
 RUN bun run build
