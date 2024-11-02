@@ -1,54 +1,54 @@
-name: Fancy Deployment
-
-on:
-  push:
-    branches: [main]  # This triggers the workflow on pushes to the master branch.
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3  # Check out the code from the repository.
-
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
-
-
-      - name: Build Docker Images
-        run: |
-          cd apps/api
-          docker compose up -d --build
-
-      - name: Build Application
-        run: |
-          cd apps/api
-          docker compose exec -T service yarn build
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Setup SSH Key
-        env:
-          PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
-        run: |
-          echo "$PRIVATE_KEY" > private_key
-          chmod 600 private_key
-
-      - name: Deploy Application
-        env:
-          HOSTNAME: ${{ secrets.HOSTNAME }}
-          USERNAME: ${{ secrets.USERNAME }}
-        run: |
-          ssh -o StrictHostKeyChecking=no -i private_key ${USERNAME}@${HOSTNAME} '
-            cd /next-nest-plush-commerce/apps/api &&
-            git checkout main &&  
-            git fetch --all && 
-            git reset --hard origin/main && 
-            git pull origin main &&  
-            docker compose up -d --build 
-          '
+#name: Fancy Deployment
+#
+#on:
+#  push:
+#    branches: [main]  # This triggers the workflow on pushes to the master branch.
+#
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout Code
+#        uses: actions/checkout@v3  # Check out the code from the repository.
+#
+#      - name: Set up Docker
+#        uses: docker/setup-buildx-action@v2
+#
+#
+#      - name: Build Docker Images
+#        run: |
+#          cd apps/api
+#          docker compose up -d --build
+#
+#      - name: Build Application
+#        run: |
+#          cd apps/api
+#          docker compose exec -T service yarn build
+#
+#  deploy:
+#    needs: build
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout Code
+#        uses: actions/checkout@v3
+#
+#      - name: Setup SSH Key
+#        env:
+#          PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
+#        run: |
+#          echo "$PRIVATE_KEY" > private_key
+#          chmod 600 private_key
+#
+#      - name: Deploy Application
+#        env:
+#          HOSTNAME: ${{ secrets.HOSTNAME }}
+#          USERNAME: ${{ secrets.USERNAME }}
+#        run: |
+#          ssh -o StrictHostKeyChecking=no -i private_key ${USERNAME}@${HOSTNAME} '
+#            cd /next-nest-plush-commerce/apps/api &&
+#            git checkout main &&
+#            git fetch --all &&
+#            git reset --hard origin/main &&
+#            git pull origin main &&
+#            docker compose up -d --build
+#          '
