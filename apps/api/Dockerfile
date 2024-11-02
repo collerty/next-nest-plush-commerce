@@ -36,7 +36,7 @@ COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/package.json ./
 COPY --from=builder /root/.bun/bin/bun /usr/local/bin/
-COPY --from=builder /usr/src/app/.env ./
+#COPY --from=builder /usr/src/app/.env ./
 
 # Expose the port on which the app will run
 EXPOSE 4000
