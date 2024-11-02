@@ -44,5 +44,5 @@ jobs:
             git fetch --all &&  # Fetch all branches and updates from the remote.
             git reset --hard origin/main &&  # Reset the current branch to match the remote.
             git pull origin main &&  # Pull the latest changes from the main branch.
-            docker-compose up -d --build  # Rebuild and start the containers.
+            docker compose up -d --build  # Rebuild and start the containers.
           '
