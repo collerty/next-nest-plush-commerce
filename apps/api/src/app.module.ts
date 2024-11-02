@@ -8,7 +8,7 @@ import {ProductModule} from './product/product.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['.env', '.env.local', '.env.production'],  // Specify the path to your .env file
+      envFilePath: ['.env', '.env', '.env.production'],  // Specify the path to your .env file
       isGlobal: true,       // Makes the config available globally
     }),
     TypeOrmModule.forRootAsync({

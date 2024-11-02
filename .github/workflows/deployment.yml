@@ -1,0 +1,48 @@
+name: Fancy Deployment
+
+on:
+  push:
+    branches: [master]  # This triggers the workflow on pushes to the master branch.
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3  # Check out the code from the repository.
+
+      - name: Build Docker Images
+        run: |
+          docker-compose up -d --build  # Build and start the services defined in docker-compose.yml.
+
+      - name: Build Application
+        run: |
+          docker-compose exec -T service yarn build  # Build the application inside the specified Docker container.
+
+  deploy:
+    needs: build  # This job depends on the build job.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3  # Check out the code from the repository again.
+
+      - name: Setup SSH Key
+        env:
+          PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key  # Save the private key to a file.
+          chmod 600 private_key  # Ensure the private key has the right permissions.
+
+      - name: Deploy Application
+        env:
+          HOSTNAME: ${{ secrets.HOSTNAME }}
+          USERNAME: ${{ secrets.USERNAME }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key ${USERNAME}@${HOSTNAME} '
+            cd /next-nest-plush-commerce/apps/api &&
+            git checkout main &&  # Ensure you're on the main branch.
+            git fetch --all &&  # Fetch all branches and updates from the remote.
+            git reset --hard origin/main &&  # Reset the current branch to match the remote.
+            git pull origin main &&  # Pull the latest changes from the main branch.
+            docker-compose up -d --build  # Rebuild and start the containers.
+          '
