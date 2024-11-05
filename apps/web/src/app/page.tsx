@@ -11,7 +11,7 @@ export default async function Home() {
           {products.map((product:any) => {
             return (
                 <Card key={product.id}>
-                  {/*<CardTitle>{product.name}</CardTitle>*/}
+                  {/*<CardTitle>{products.name}</CardTitle>*/}
                   <CardHeader>{product.id}</CardHeader>
                   <CardContent>{product.name}</CardContent>
                   <CardFooter>{product.price}</CardFooter>

@@ -8,11 +8,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
-const typeorm_1 = require("@nestjs/typeorm");
-const config_1 = require("@nestjs/config");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const product_module_1 = require("./product/product.module");
+const config_1 = require("@nestjs/config");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("./config/typeorm");
+const products_module_1 = require("./products/products.module");
+const users_module_1 = require("./users/users.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -20,27 +22,22 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({
-                envFilePath: ['.env', '.env', '.env.production'],
                 isGlobal: true,
+                load: [typeorm_2.default],
             }),
             typeorm_1.TypeOrmModule.forRootAsync({
                 imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],
-                useFactory: (configService) => ({
-                    type: 'postgres',
-                    host: configService.get('DB_HOST'),
-                    port: configService.get('DB_PORT'),
-                    username: configService.get('DB_USER'),
-                    password: configService.get('DB_PASSWORD'),
-                    database: configService.get('DB_NAME'),
-                    entities: [__dirname + '/**/*.entity{.ts,.js}'],
-                    ssl: {
-                        rejectUnauthorized: false,
-                    },
-                    synchronize: true,
-                }),
+                useFactory: async (configService) => {
+                    const typeOrmConfig = configService.get('typeorm');
+                    if (!typeOrmConfig) {
+                        throw new Error('TypeORM configuration is not defined');
+                    }
+                    return typeOrmConfig;
+                },
             }),
-            product_module_1.ProductModule,
+            products_module_1.ProductsModule,
+            users_module_1.UsersModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
