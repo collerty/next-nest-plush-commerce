@@ -38,8 +38,21 @@ export class UsersService {
     return user;
   }
 
+  async findOneByEmailOrUsername(email: string, username: string): Promise<User | null> {
+    return await this.usersRepository.findOne({
+      where: [
+        {email: email},
+        {username: username}
+      ]
+    });
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOneById(id);
+
+    if (!user) {
+      throw new Error('User not found'); // Ensure user exists
+    }
 
     Object.assign(user, updateUserDto);
     user.modified_at = new Date();

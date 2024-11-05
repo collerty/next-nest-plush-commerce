@@ -10,12 +10,12 @@ dotenvConfig({ path: '.env' });
 
 const config = {
   type: 'postgres',
-  url: process.env.DB_HOST, // Ensure this environment variable is set
+  url: process.env.DB_HOST,
   entities: ["dist/**/*.entity{.ts,.js}"],
   migrations: ["dist/migrations/*{.ts,.js}"],
-  // entities: [User, Product], // Adjust path for entities
-  // migrations: ['/../migrations/*{.ts,.js}'], // Adjust path for migrations
-  synchronize: false, // Disable synchronize in production
+  // entities: [User, Product],
+  // migrations: ['/../migrations/*{.ts,.js}'],
+  synchronize: true, // Disable synchronize in production
 };
 
 export default registerAs('typeorm', () => config);

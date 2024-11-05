@@ -30,5 +30,10 @@ export class CreateUserDto {
     one number and 
     one special character`,
   })
+  @IsNotEmpty()
+  @MinLength(6)
   password: string;
+
+  @IsString()
+  refreshToken?: string;
 }
