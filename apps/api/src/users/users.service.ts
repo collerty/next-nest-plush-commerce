@@ -13,6 +13,29 @@ export class UsersService {
   ) {
   }
 
+  async findOrCreateUser(profile: any, provider: string): Promise<User> {
+    const email = profile.emails?.[0]?.value;
+
+    if (!email) {
+      throw new Error('No email found in the user profile');
+    }
+
+    let user = await this.usersRepository.findOne({
+      where: {socialId: profile.id},
+    });
+    if (!user) {
+      const User = {
+        socialId: profile.id,
+        provider,
+        name: profile.displayName || profile.name.givenName,
+        email: email,
+      }
+      user = this.usersRepository.create(User);
+      await this.usersRepository.save(user);
+    }
+    return user;
+  }
+
   create(createUserDto: CreateUserDto): Promise<User> {
     const user = this.usersRepository.create(createUserDto);
     return this.usersRepository.save(user);

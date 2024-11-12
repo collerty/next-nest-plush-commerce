@@ -36,4 +36,7 @@ export class CreateUserDto {
 
   @IsString()
   refreshToken?: string;
+
+  @IsString()
+  socialId?: string;
 }

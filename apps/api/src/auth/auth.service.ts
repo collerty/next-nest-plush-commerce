@@ -2,6 +2,7 @@ import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {UsersService} from "../users/users.service";
 import {JwtService} from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt';
+import {User} from "../users/entities/user.entity";
 
 @Injectable()
 export class AuthService {
@@ -57,7 +58,7 @@ export class AuthService {
 
   async logout(userId: number) {
     await this.usersService.update(userId, {refreshToken: ""});
-    return { message: 'Logged out successfully' }
+    return {message: 'Logged out successfully'}
   }
 
   async updateRefreshToken(userId: number, refreshToken: string) {
@@ -94,4 +95,15 @@ export class AuthService {
     }
   }
 
+  async validateOAuthUser(profile: any, provider: string): Promise<User> {
+    return this.usersService.findOrCreateUser(profile, provider);
+  }
+
+  async generateJwtToken(user: User): Promise<string> {
+    ;
+    return this.jwtService.sign(
+        {sub: user.id, email: user.email, username: user.username},
+        {expiresIn: '3600s'},
+    );
+  }
 }

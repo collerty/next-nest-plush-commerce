@@ -5,13 +5,16 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ nullable: true, unique: true })
+  socialId: string;
+
   @Column({nullable: false, unique: true})
   username: string;
 
   @Column({nullable: false, unique: true})
   email: string;
 
-  @Column({nullable: false})
+  @Column({nullable: true})
   password: string;
 
   @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
@@ -20,6 +23,6 @@ export class User {
   @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
   modified_at: Date;
 
-  @Column({nullable: true}) // Add this field to store refresh token
+  @Column({nullable: true})
   refreshToken: string;
 }
