@@ -3,6 +3,7 @@ import {AuthService} from './auth.service';
 import {SignInDto} from './dto/sign-in.dto';
 import {SignUpDto} from "./dto/sign-up.dto";
 import {Public} from "./public.decorator";
+import {GithubOauthGuard} from "./guards/github-oauth.guard";
 
 @Controller('auth')
 export class AuthController {
@@ -37,25 +38,29 @@ export class AuthController {
     return newTokens;
   }
 
-
+  @Public()
   @Get('google')
   async googleAuth() {
   }
 
+  @Public()
   @Get('google/callback')
   async googleAuthRedirect(@Req() req: any, @Res() res: any) {
-    const jwtToken = await this.authService.generateJwtToken(req.user);
-    res.json({token: jwtToken});
+    const tokens = await this.authService.socialLogin(req.user, 'github');
+    res.json(tokens);
   }
 
+  @Public()
+  @UseGuards(GithubOauthGuard)
   @Get('github')
   async githubAuth() {
   }
 
+  @Public()
+  @UseGuards(GithubOauthGuard)
   @Get('github/callback')
   async githubAuthRedirect(@Req() req: any, @Res() res: any) {
-    const jwtToken = await this.authService.generateJwtToken(req.user);
-    res.json({token: jwtToken});
+    const tokens = await this.authService.socialLogin(req.user, 'github');
+    res.json(tokens);
   }
-
 }

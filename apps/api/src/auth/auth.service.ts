@@ -12,8 +12,8 @@ export class AuthService {
   ) {
   }
 
-  async signIn(username: string, pass: string): Promise<{ access_token: string, refresh_token: string }> {
-    const user = await this.usersService.findOneByUsername(username);
+  async signIn(email: string, pass: string): Promise<{ access_token: string, refresh_token: string }> {
+    const user = await this.usersService.findOneByEmail(email);
     if (!user) {
       throw new UnauthorizedException('Invalid username')
     }
@@ -53,6 +53,19 @@ export class AuthService {
     return {
       access_token: accessToken,
       refresh_token: refreshToken
+    };
+  }
+
+  async socialLogin(user: any, provider: string): Promise<{ access_token: string, refresh_token: string }> {
+    const payload = {sub: user.id, username: user.username, email: user.email};
+    const accessToken = this.jwtService.sign(payload, {expiresIn: '15m'});
+    const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
+
+    await this.updateRefreshToken(user.id, refreshToken);
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken,
     };
   }
 
@@ -106,4 +119,5 @@ export class AuthService {
         {expiresIn: '3600s'},
     );
   }
+
 }

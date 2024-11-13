@@ -27,7 +27,7 @@ export class UsersService {
       const User = {
         socialId: profile.id,
         provider,
-        name: profile.displayName || profile.name.givenName,
+        username: profile.displayName || profile.name.givenName,
         email: email,
       }
       user = this.usersRepository.create(User);
@@ -57,6 +57,14 @@ export class UsersService {
     const user = await this.usersRepository.findOneBy({username});
     if (!user) {
       throw new NotFoundException(`User with username ${username} not found`);
+    }
+    return user;
+  }
+
+  async findOneByEmail(email: string): Promise<User> {
+    const user = await this.usersRepository.findOneBy({email});
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
     }
     return user;
   }
