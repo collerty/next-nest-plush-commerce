@@ -4,6 +4,7 @@ import {SignInDto} from './dto/sign-in.dto';
 import {SignUpDto} from "./dto/sign-up.dto";
 import {Public} from "./public.decorator";
 import {GithubOauthGuard} from "./guards/github-oauth.guard";
+import {GoogleOauthGuard} from "./guards/google-oauth.guard";
 
 @Controller('auth')
 export class AuthController {
@@ -39,11 +40,13 @@ export class AuthController {
   }
 
   @Public()
+  @UseGuards(GoogleOauthGuard)
   @Get('google')
   async googleAuth() {
   }
 
   @Public()
+  @UseGuards(GoogleOauthGuard)
   @Get('google/callback')
   async googleAuthRedirect(@Req() req: any, @Res() res: any) {
     const tokens = await this.authService.socialLogin(req.user, 'github');

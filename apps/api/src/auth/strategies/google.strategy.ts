@@ -24,6 +24,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   ): Promise<any> {
     const user = await this.authService.validateOAuthUser(profile, 'google');
     done(null, user);
+
     return user;
   }
 }
