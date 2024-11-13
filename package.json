@@ -11,11 +11,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "concurrently": "^9.0.1",
-    "passport-github2": "^0.1.12",
-    "passport-google-oauth20": "^2.0.0"
+    "concurrently": "^9.0.1"
   },
   "devDependencies": {
-    "@types/passport-google-oauth20": "^2.0.16"
   }
 }
