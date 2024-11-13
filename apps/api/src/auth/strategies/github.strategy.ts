@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {ConfigService} from '@nestjs/config';
 import {PassportStrategy} from '@nestjs/passport';
-import {Profile, Strategy} from 'passport-github';
+import {Profile, Strategy} from 'passport-github2';
 import {AuthService} from "../auth.service";
 
 @Injectable()
