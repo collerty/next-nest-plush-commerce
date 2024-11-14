@@ -16,6 +16,8 @@ const typeorm_2 = require("./config/typeorm");
 const products_module_1 = require("./products/products.module");
 const users_module_1 = require("./users/users.module");
 const auth_module_1 = require("./auth/auth.module");
+const categories_module_1 = require("./categories/categories.module");
+const orders_module_1 = require("./orders/orders.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -40,7 +42,9 @@ exports.AppModule = AppModule = __decorate([
             }),
             products_module_1.ProductsModule,
             users_module_1.UsersModule,
-            auth_module_1.AuthModule
+            auth_module_1.AuthModule,
+            categories_module_1.CategoriesModule,
+            orders_module_1.OrdersModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
