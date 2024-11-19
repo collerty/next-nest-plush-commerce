@@ -17,13 +17,14 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Invalid username')
     }
+    console.log(pass, user.password)
     const isMatch = await bcrypt.compare(pass, user.password);
     if (!isMatch) {
       throw new UnauthorizedException('Invalid password');
     }
     const {password, ...result} = user;
     const payload = {sub: user.id, username: user.username, email: user.email};
-    const accessToken = this.jwtService.sign(payload, {expiresIn: '15m'});
+    const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
     const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
     await this.updateRefreshToken(user.id, refreshToken);
 
@@ -46,7 +47,7 @@ export class AuthService {
     const user = await this.usersService.create({username, email, password: hashedPassword});
 
     const payload = {sub: user.id, username: user.username, email: user.email};
-    const accessToken = this.jwtService.sign(payload, {expiresIn: '15m'});
+    const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
     const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
     await this.updateRefreshToken(user.id, refreshToken);
 
@@ -58,7 +59,7 @@ export class AuthService {
 
   async socialLogin(user: any, provider: string): Promise<{ access_token: string, refresh_token: string }> {
     const payload = {sub: user.id, username: user.username, email: user.email};
-    const accessToken = this.jwtService.sign(payload, {expiresIn: '15m'});
+    const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
     const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
 
     await this.updateRefreshToken(user.id, refreshToken);
