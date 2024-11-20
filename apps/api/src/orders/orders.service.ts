@@ -7,6 +7,7 @@ import {OrderItem} from "./entities/order-item.entity";
 import {Repository} from "typeorm";
 import {CreateOrderItemDto} from "./dto/create-order-item.dto";
 import {use} from "passport";
+import {Product} from "../products/entities/product.entity";
 
 @Injectable()
 export class OrdersService {
@@ -14,27 +15,36 @@ export class OrdersService {
       @InjectRepository(Order)
       private readonly ordersRepository: Repository<Order>,
       @InjectRepository(OrderItem)
-      private readonly orderItemsRepository: Repository<OrderItem>
+      private readonly orderItemsRepository: Repository<OrderItem>,
+      @InjectRepository(Product)
+      private readonly productRepository: Repository<Product>
   ) {
   }
 
   async createOrder(createOrderDto: CreateOrderDto, userId: number): Promise<Order> {
     const {items} = createOrderDto;
     const defaultStatus = OrderStatus.PENDING;
+
     const order = this.ordersRepository.create({
       status: defaultStatus,
-      user: {id: userId}
+      user: {id: userId},
     });
+
     const savedOrder = await this.ordersRepository.save(order);
 
-    const orderItems = items.map((item) => {
+    const orderItems = await Promise.all(items.map(async (item) => {
+      const product = await this.productRepository.findOne({where: {id: item.productId}});
+      if (!product) {
+        throw new NotFoundException(`Product with ID ${item.productId} not found`);
+      }
+
       return this.orderItemsRepository.create({
         order: savedOrder,
-        product: {id: item.productId},
+        product,
         quantity: item.quantity,
-        pricePerUnit: item.pricePerUnit
-      })
-    })
+        pricePerUnit: item.pricePerUnit,
+      });
+    }));
 
     await this.orderItemsRepository.save(orderItems);
 
@@ -77,7 +87,7 @@ export class OrdersService {
     const order = await this.ordersRepository.findOne({
       where: {
         id: orderId,
-        // user: {id: userId}
+        user: { id: userId }
       }
     });
 
