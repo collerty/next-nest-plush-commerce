@@ -6,17 +6,32 @@ import {Repository} from 'typeorm';
 import {Product} from './entities/product.entity';
 import {CreateProductDto} from './dto/create-product.dto';
 import {UpdateProductDto} from './dto/update-product.dto';
+import {Category} from "../categories/entities/category.entity";
 
 @Injectable()
 export class ProductsService {
   constructor(
       @InjectRepository(Product)
       private readonly productsRepository: Repository<Product>,
+
+      @InjectRepository(Category)
+      private readonly categoryRepository: Repository<Category>
   ) {
   }
 
-  create(createProductDto: CreateProductDto): Promise<Product> {
-    const product = this.productsRepository.create(createProductDto);
+  async create(createProductDto: CreateProductDto): Promise<Product> {
+    const {categoryId, ...productData} = createProductDto;
+
+    const category = await this.categoryRepository.findOneBy({id: categoryId});
+    if (!category) {
+      throw new NotFoundException(`Category with ID ${categoryId} not found`);
+    }
+
+    const product = this.productsRepository.create({
+      ...productData,
+      category,
+    });
+
     return this.productsRepository.save(product);
   }
 
@@ -26,7 +41,7 @@ export class ProductsService {
 
   findAllByCategory(id: number): Promise<Product[]> {
     return this.productsRepository.find({
-      where: { category: { id: id } },
+      where: {category: {id: id}},
       relations: ['category'], // Ensure the category relationship is loaded
     });
   }
