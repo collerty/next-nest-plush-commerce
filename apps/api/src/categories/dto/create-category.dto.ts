@@ -1,12 +1,18 @@
-import {IsArray, IsNotEmpty, ValidateNested} from "class-validator";
-import {Product} from "../../products/entities/product.entity";
-import {Type} from "class-transformer";
-import {CreateProductDto} from "../../products/dto/create-product.dto";
+import { IsArray, IsNotEmpty, ValidateNested } from "class-validator";
+import { Type } from "class-transformer";
+import { ApiProperty } from "@nestjs/swagger";
+import { CreateProductDto } from "../../products/dto/create-product.dto";
 
 export class CreateCategoryDto {
+  @ApiProperty({ description: 'Category name', type: String })
   @IsNotEmpty()
   name: string;
 
+  @ApiProperty({
+    description: 'List of products for this category',
+    type: () => [CreateProductDto],
+    required: false,
+  })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateProductDto)

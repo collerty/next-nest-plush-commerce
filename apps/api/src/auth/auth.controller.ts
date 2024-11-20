@@ -1,39 +1,66 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, Req, Res} from '@nestjs/common';
-import {AuthService} from './auth.service';
-import {SignInDto} from './dto/sign-in.dto';
-import {SignUpDto} from "./dto/sign-up.dto";
-import {Public} from "./public.decorator";
-import {GithubOauthGuard} from "./guards/github-oauth.guard";
-import {GoogleOauthGuard} from "./guards/google-oauth.guard";
+import { Controller, Post, Body, Get, Req, Res, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { AuthService } from './auth.service';
+import { SignInDto } from './dto/sign-in.dto';
+import { SignUpDto } from './dto/sign-up.dto';
+import { Public } from './public.decorator';
+import { GoogleOauthGuard } from './guards/google-oauth.guard';
+import { GithubOauthGuard } from './guards/github-oauth.guard';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {
-  }
+  constructor(private readonly authService: AuthService) {}
 
   @Public()
   @Post('login')
+  @ApiOperation({ summary: 'Log in with email and password' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully logged in and returned access and refresh tokens.',
+  })
+  @ApiResponse({ status: 401, description: 'Invalid credentials.' })
   login(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto.email, signInDto.password);
   }
 
   @Public()
   @Post('register')
+  @ApiOperation({ summary: 'Register a new user' })
+  @ApiResponse({
+    status: 201,
+    description: 'Successfully registered and returned access and refresh tokens.',
+  })
+  @ApiResponse({ status: 400, description: 'User with this email or username already exists.' })
   register(@Body() signUpDto: SignUpDto) {
     return this.authService.signUp(signUpDto.username, signUpDto.email, signUpDto.password);
   }
 
   @Post('logout')
+  @ApiOperation({ summary: 'Log out the current user' })
+  @ApiResponse({ status: 200, description: 'Successfully logged out.' })
   logOut(@Req() req: any) {
     return this.authService.logout(req.user.id);
   }
 
   @Get('profile')
+  @ApiOperation({ summary: 'Get the profile of the current logged-in user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return the user profile.',
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   getProfile(@Req() req: any) {
     return req.user;
   }
 
   @Post('refresh')
+  @ApiOperation({ summary: 'Refresh the access and refresh tokens' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully refreshed tokens.',
+  })
+  @ApiResponse({ status: 401, description: 'Invalid or expired refresh token.' })
   async refreshToken(@Body('refreshToken') refreshToken: string) {
     const newTokens = await this.authService.refreshTokens(refreshToken);
     return newTokens;
@@ -42,26 +69,32 @@ export class AuthController {
   @Public()
   @UseGuards(GoogleOauthGuard)
   @Get('google')
-  async googleAuth() {
-  }
+  @ApiOperation({ summary: 'Google OAuth authentication' })
+  googleAuth() {}
 
   @Public()
   @UseGuards(GoogleOauthGuard)
   @Get('google/callback')
+  @ApiOperation({ summary: 'Google OAuth callback' })
+  @ApiResponse({ status: 200, description: 'OAuth login successful.' })
+  @ApiResponse({ status: 400, description: 'OAuth authentication failed.' })
   async googleAuthRedirect(@Req() req: any, @Res() res: any) {
-    const tokens = await this.authService.socialLogin(req.user, 'github');
+    const tokens = await this.authService.socialLogin(req.user, 'google');
     res.json(tokens);
   }
 
   @Public()
   @UseGuards(GithubOauthGuard)
   @Get('github')
-  async githubAuth() {
-  }
+  @ApiOperation({ summary: 'GitHub OAuth authentication' })
+  githubAuth() {}
 
   @Public()
   @UseGuards(GithubOauthGuard)
   @Get('github/callback')
+  @ApiOperation({ summary: 'GitHub OAuth callback' })
+  @ApiResponse({ status: 200, description: 'OAuth login successful.' })
+  @ApiResponse({ status: 400, description: 'OAuth authentication failed.' })
   async githubAuthRedirect(@Req() req: any, @Res() res: any) {
     const tokens = await this.authService.socialLogin(req.user, 'github');
     res.json(tokens);

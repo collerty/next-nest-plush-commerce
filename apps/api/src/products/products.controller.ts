@@ -4,7 +4,7 @@ import {UpdateProductDto} from "./dto/update-product.dto";
 import {CreateProductDto} from "./dto/create-product.dto";
 import {ProductsService} from "./products.service";
 
-@ApiTags('Products') // Grouping products routes in Swagger
+@ApiTags('Products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productService: ProductsService) {}

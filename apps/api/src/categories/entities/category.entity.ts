@@ -1,14 +1,18 @@
-import {Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
-import {Product} from "../../products/entities/product.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { ApiProperty } from '@nestjs/swagger';
+import { Product } from "../../products/entities/product.entity";
 
 @Entity()
 export class Category {
+  @ApiProperty({ description: 'Unique identifier for the category' })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({unique: true})
+  @ApiProperty({ description: 'Name of the category' })
+  @Column({ unique: true })
   name: string;
 
-  @OneToMany(() => Product, (product) => product.category, {cascade: true})
+  @ApiProperty({ description: 'List of products in this category' })
+  @OneToMany(() => Product, (product) => product.category, { cascade: true })
   products: Product[];
 }

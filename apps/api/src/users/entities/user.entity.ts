@@ -1,36 +1,47 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
-import {Product} from "../../products/entities/product.entity";
-import {Order} from "../../orders/entities/order.entity";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import { Product } from '../../products/entities/product.entity';
+import { Order } from '../../orders/entities/order.entity';
 
 @Entity()
 export class User {
+  @ApiProperty({ description: 'Unique identifier of the user' })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({nullable: true, unique: true})
+  @ApiProperty({ description: 'Social media ID for the user', required: false })
+  @Column({ nullable: true, unique: true })
   socialId: string;
 
-  @Column({nullable: false})
+  @ApiProperty({ description: 'Username of the user' })
+  @Column({ nullable: false })
   username: string;
 
-  @Column({nullable: false, unique: true})
+  @ApiProperty({ description: 'Email of the user' })
+  @Column({ nullable: false, unique: true })
   email: string;
 
-  @Column({nullable: true})
+  @ApiProperty({ description: 'Password of the user (hashed)' })
+  @Column({ nullable: true })
   password: string;
 
-  @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
+  @ApiProperty({ description: 'Timestamp when the user was created' })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
-  @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP"})
+  @ApiProperty({ description: 'Timestamp when the user was last modified' })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   modified_at: Date;
 
-  @Column({nullable: true})
+  @ApiProperty({ description: 'Refresh token of the user (if any)', required: false })
+  @Column({ nullable: true })
   refreshToken: string;
 
+  @ApiProperty({ description: 'List of products created by the user' })
   @OneToMany(() => Product, (product) => product.seller)
   products: Product[];
 
+  @ApiProperty({ description: 'List of orders made by the user' })
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
 }
