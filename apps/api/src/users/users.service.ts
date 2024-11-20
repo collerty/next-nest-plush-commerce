@@ -86,7 +86,6 @@ export class UsersService {
     }
 
     Object.assign(user, updateUserDto);
-    user.modified_at = new Date();
 
     return await this.usersRepository.save(user);
   }

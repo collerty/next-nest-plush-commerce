@@ -22,7 +22,7 @@ export class User {
   @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
   created_at: Date;
 
-  @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
+  @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP"})
   modified_at: Date;
 
   @Column({nullable: true})
