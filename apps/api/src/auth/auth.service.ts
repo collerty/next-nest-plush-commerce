@@ -12,7 +12,7 @@ export class AuthService {
   ) {
   }
 
-  async signIn(email: string, pass: string): Promise<{ access_token: string, refresh_token: string }> {
+  async signIn(email: string, pass: string): Promise<{ accessToken: string, refreshToken: string }> {
     const user = await this.usersService.findOneByEmail(email);
     if (!user) {
       throw new UnauthorizedException('Invalid username')
@@ -29,14 +29,14 @@ export class AuthService {
     await this.updateRefreshToken(user.id, refreshToken);
 
     return {
-      access_token: accessToken,
-      refresh_token: refreshToken
+      accessToken: accessToken,
+      refreshToken: refreshToken
     };
   }
 
   async signUp(username: string, email: string, pass: string): Promise<{
-    access_token: string,
-    refresh_token: string
+    accessToken: string,
+    refreshToken: string
   }> {
     const existingUser = await this.usersService.findOneByEmailOrUsername(email, username);
     if (existingUser) {
@@ -52,12 +52,12 @@ export class AuthService {
     await this.updateRefreshToken(user.id, refreshToken);
 
     return {
-      access_token: accessToken,
-      refresh_token: refreshToken
+      accessToken: accessToken,
+      refreshToken: refreshToken
     };
   }
 
-  async socialLogin(user: any, provider: string): Promise<{ access_token: string, refresh_token: string }> {
+  async socialLogin(user: any, provider: string): Promise<{ accessToken: string, refreshToken: string }> {
     const payload = {sub: user.id, username: user.username, email: user.email};
     const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
     const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
@@ -65,8 +65,8 @@ export class AuthService {
     await this.updateRefreshToken(user.id, refreshToken);
 
     return {
-      access_token: accessToken,
-      refresh_token: refreshToken,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
     };
   }
 
