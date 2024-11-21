@@ -1,9 +1,9 @@
 import {Card, CardContent,  CardFooter, CardHeader} from "@/components/ui/card";
 
 export default async function Home() {
-  const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product`);
-  const products = await data.json();
-  // console.log(products);
+  const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`);
+  const products: any[] = await data.json();
+  console.log(products);
   return (
       <div className="w-full h-full flex flex-col">
         <div className="flex">

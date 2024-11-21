@@ -17,11 +17,12 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Invalid username')
     }
-    console.log(pass, user.password)
+
     const isMatch = await bcrypt.compare(pass, user.password);
     if (!isMatch) {
       throw new UnauthorizedException('Invalid password');
     }
+
     const {password, ...result} = user;
     const payload = {sub: user.id, username: user.username, email: user.email};
     const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
