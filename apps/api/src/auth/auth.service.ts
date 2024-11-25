@@ -1,4 +1,4 @@
-import {Injectable, UnauthorizedException} from '@nestjs/common';
+import {Injectable, Res, UnauthorizedException} from '@nestjs/common';
 import {UsersService} from "../users/users.service";
 import {JwtService} from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt';
@@ -12,7 +12,7 @@ export class AuthService {
   ) {
   }
 
-  async signIn(email: string, pass: string): Promise<{ accessToken: string, refreshToken: string }> {
+  async signIn(email: string, pass: string, res: any): Promise<{ accessToken: string, refreshToken: string }> {
     const user = await this.usersService.findOneByEmail(email);
     if (!user) {
       throw new UnauthorizedException('Invalid username')
@@ -28,6 +28,19 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
     const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
     await this.updateRefreshToken(user.id, refreshToken);
+
+    // Set cookies in the response
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
 
     return {
       accessToken: accessToken,

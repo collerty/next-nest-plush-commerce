@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { clsx } from "clsx";
 import { GeistSans } from 'geist/font/sans';
+import {Toaster} from "sonner";
 
 
 
@@ -21,6 +22,7 @@ export default function RootLayout({
       <main className="w-full h-full">
         {children}
       </main>
+      <Toaster/>
       </body>
       </html>
   );

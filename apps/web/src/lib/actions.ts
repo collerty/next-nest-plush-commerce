@@ -2,16 +2,37 @@
 
 const url = process.env.NEXT_PUBLIC_API_URL;
 
-export async function login(body: any) {
-  const res = await fetch(`${url}/auth/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json' // Ensures the server knows the body is JSON
-    },
-    body: JSON.stringify(body) // Serialize the body to JSON format
-  });
-  console.log(body);
-  const data = await res.json();
-  console.log(data);
-  return data;
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+}
+
+interface LoginBody {
+  email: string;
+  password: string;
+}
+
+interface Tokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export async function login(body: LoginBody): Promise<ApiResponse<Tokens>> {
+  try {
+    const res = await fetch(`${url}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: "include",
+      body: JSON.stringify(body)
+    });
+
+    const data = await res.json();
+
+    return {success: true, data: data};
+  } catch (error: any) {
+    return {success: false, error: error.response?.data?.message};
+  }
 }

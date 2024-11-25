@@ -37,20 +37,24 @@ export function AuthForm() {
   })
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    let loggedIn = true;
-    if (loggedIn) {
+    try {
       const res = await login({
         email: "test123@gmail.com",
         password: "test123"
       });
+      const data = res.data;
+      console.log({data});
       toast.success("Logged in", {
-        // description: (
-            // <div>{res}</div>
-        // )
+        description: (
+            <div>
+              <span>{data?.accessToken}</span>
+              <span> {data?.refreshToken}</span>
+            </div>
+        )
       })
       // router.push("/navigation");
-    } else {
-      toast.error("Error");
+    } catch (e) {
+      toast.error(`${e}`);
     }
   }
 
