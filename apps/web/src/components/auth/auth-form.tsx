@@ -52,7 +52,7 @@ export function AuthForm() {
             </div>
         )
       })
-      // router.push("/navigation");
+      // router.push("/");
     } catch (e) {
       toast.error(`${e}`);
     }

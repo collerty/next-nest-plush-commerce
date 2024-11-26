@@ -1,14 +1,19 @@
-import {Card, CardContent,  CardFooter, CardHeader} from "@/components/ui/card";
+import {Card, CardContent, CardFooter, CardHeader} from "@/components/ui/card";
+import {headers} from "next/headers";
+import {fetcher} from "@/lib/fetcher";
 
 export default async function Home() {
-  const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`);
+  const data = await fetcher(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
+    method: "GET",
+    // headers: new Headers({'Authorization': 'Basic ' + cookies.get})
+  });
   const products: any[] = await data.json();
   console.log(products);
   return (
       <div className="w-full h-full flex flex-col">
         <div className="flex">
           {/* eslint-disable-next-line*/}
-          {products.map((product:any) => {
+          {products.map((product: any) => {
             return (
                 <Card key={product.id}>
                   {/*<CardTitle>{products.name}</CardTitle>*/}

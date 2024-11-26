@@ -14,10 +14,7 @@ async function bootstrap() {
         transform: true,
     }));
     app.use(cookieParser());
-    app.enableCors({
-        origin: 'http://localhost:3000',
-        credentials: true,
-    });
+    app.enableCors();
     const config = new swagger_1.DocumentBuilder()
         .setTitle('E-commerce API')
         .setDescription('API documentation for the e-commerce application')

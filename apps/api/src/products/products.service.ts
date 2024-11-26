@@ -36,6 +36,7 @@ export class ProductsService {
   }
 
   findAll(): Promise<Product[]> {
+    console.log("find all")
     return this.productsRepository.find();
   }
 

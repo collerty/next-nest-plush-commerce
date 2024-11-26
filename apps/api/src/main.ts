@@ -17,10 +17,11 @@ async function bootstrap() {
   );
 
   app.use(cookieParser());
-  app.enableCors({
-    origin: 'http://localhost:3000',
-    credentials: true,
-  });
+  app.enableCors()
+  // {
+  // origin: 'http://localhost:3000',
+  // credentials: true,
+  // });
 
   const config = new DocumentBuilder()
       .setTitle('E-commerce API')
