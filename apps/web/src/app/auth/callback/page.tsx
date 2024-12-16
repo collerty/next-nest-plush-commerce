@@ -1,6 +1,7 @@
 "use client"
 import {Button} from "@/components/ui/button";
-import {getAuthTokens} from "@/lib/fetcher";
+import {getAuthTokens} from "@/lib/auth-tokens";
+import {getProfile} from "@/lib/actions";
 
 export default function Page() {
   return (

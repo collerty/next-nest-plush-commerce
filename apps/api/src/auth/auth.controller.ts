@@ -40,8 +40,8 @@ export class AuthController {
   @Post('logout')
   @ApiOperation({summary: 'Log out the current user'})
   @ApiResponse({status: 200, description: 'Successfully logged out.'})
-  logOut(@Req() req: any) {
-    return this.authService.logout(req.user.id);
+  logOut(@Req() req: any, @Res() res: any) {
+    return this.authService.logout(req, res);
   }
 
   @Get('profile')
@@ -52,6 +52,7 @@ export class AuthController {
   })
   @ApiResponse({status: 401, description: 'Unauthorized.'})
   getProfile(@Req() req: any) {
+    console.log(req);
     return req.user;
   }
 
@@ -82,22 +83,9 @@ export class AuthController {
   @ApiResponse({status: 200, description: 'OAuth login successful.'})
   @ApiResponse({status: 400, description: 'OAuth authentication failed.'})
   async googleAuthRedirect(@Req() req: any, @Res({passthrough: true}) res: any) {
-    const tokens = await this.authService.socialLogin(req.user, 'google');
-    const {accessToken, refreshToken} = tokens;
-    // res.json(tokens);
-    // const redirectUrl = `http://localhost:3000/auth/callback?token=${accessToken}`;
-    const redirectUrl = 'http://localhost:3000/';
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 60 * 60 * 1000, // 1 hour
-    });
+    await this.authService.socialLogin(req.user, 'google', res);
 
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    const redirectUrl = 'http://localhost:3000/';
     return res.redirect(redirectUrl);
   }
 
@@ -115,22 +103,9 @@ export class AuthController {
   @ApiResponse({status: 200, description: 'OAuth login successful.'})
   @ApiResponse({status: 400, description: 'OAuth authentication failed.'})
   async githubAuthRedirect(@Req() req: any, @Res() res: any) {
-    const tokens = await this.authService.socialLogin(req.user, 'github');
-    const {accessToken, refreshToken} = tokens;
-    // res.json(tokens);
-    // const redirectUrl = `http://localhost:3000/auth/callback?token=${accessToken}`;
-    const redirectUrl = 'http://localhost:3000/';
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 60 * 60 * 1000, // 1 hour
-    });
+    await this.authService.socialLogin(req.user, 'github', res);
 
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    const redirectUrl = 'http://localhost:3000/';
     return res.redirect(redirectUrl);
   }
 }

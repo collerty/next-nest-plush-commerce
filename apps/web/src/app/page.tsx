@@ -9,7 +9,7 @@ export default async function Home() {
     // headers: new Headers({'Authorization': 'Basic ' + cookies.get})
   });
   // const products: any[] = await data.json();
-  console.log(products);
+  // console.log(products);
   return (
       <div className="w-full h-full flex flex-col">
         <div className="flex">

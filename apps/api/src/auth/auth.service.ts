@@ -28,6 +28,8 @@ export class AuthService {
     const payload = {sub: user.id, username: user.username, email: user.email};
     const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
     const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
+    console.log("Normal login generated refreshToken:", refreshToken);
+
     await this.updateRefreshToken(user.id, refreshToken);
 
     // Set cookies in the response
@@ -64,7 +66,7 @@ export class AuthService {
     const payload = {sub: user.id, username: user.username, email: user.email};
     const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
     const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
-
+    console.log("Sign up generated refreshToken:", refreshToken);
     await this.updateRefreshToken(user.id, refreshToken);
 
     res.cookie('accessToken', accessToken, {
@@ -85,51 +87,55 @@ export class AuthService {
     };
   }
 
-  async socialLogin(user: any, provider: string): Promise<{ accessToken: string, refreshToken: string }> {
+  async socialLogin(user: any, provider: string, res: any): Promise<{ accessToken: string, refreshToken: string }> {
     const payload = {sub: user.id, username: user.username, email: user.email};
     const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
     const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
-
+    console.log("Social login generated refreshToken:", refreshToken);
     await this.updateRefreshToken(user.id, refreshToken);
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
 
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
     return {
       accessToken: accessToken,
       refreshToken: refreshToken,
     };
   }
 
-  async logout(userId: number) {
-    await this.usersService.update(userId, {refreshToken: ""});
-    return {message: 'Logged out successfully'}
+  async logout(req: any, res: any) {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    return res.status(200).json({message: 'Logged out successfully'});
   }
 
   async refreshTokens(refreshToken: string) {
     try {
-      // Step 1: Verify the JWT refresh token
-      const payload = this.jwtService.verify(refreshToken); // Verifies the integrity of the JWT
+      const payload = this.jwtService.verify(refreshToken);
 
-      // Step 2: Retrieve the user from the database
       const user = await this.usersService.findOneById(payload.sub);
       if (!user) {
         throw new UnauthorizedException('User not found');
       }
 
-      // Step 3: Compare the incoming refresh token with the hashed refresh token stored in the DB
-      const isValid = await bcrypt.compare(refreshToken, user.refreshToken);
+      // const isValid = await bcrypt.compare(refreshToken, user.refreshToken);
+      const isValid = refreshToken === user.refreshToken;
       console.log(isValid, refreshToken, user.refreshToken);
       if (!isValid) {
         throw new UnauthorizedException('Invalid refresh token');
       }
 
-      // Step 4: Generate new access and refresh tokens (JWT for access, random string for refresh)
-      const newAccessToken = this.jwtService.sign(
-          {sub: user.id, email: user.email, username: user.username},
-          {expiresIn: '3600s'}
-      );
+      const newAccessToken = this.jwtService.sign(payload, {expiresIn: '3600s'});
+      const newRefreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
 
-      const newRefreshToken = crypto.randomBytes(64).toString('hex'); // Generate a random string as a new refresh token
-
-      // Step 5: Hash the new refresh token before storing it in the database
+      console.log("Refresh generated refreshToken:", newRefreshToken);
       await this.updateRefreshToken(user.id, newRefreshToken);
 
       return {
@@ -141,7 +147,7 @@ export class AuthService {
     }
   }
 
-  // Update the refresh token by hashing it before saving to the DB
+
   async updateRefreshToken(userId: number, refreshToken: string) {
     // const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     await this.usersService.update(userId, {refreshToken: refreshToken});
