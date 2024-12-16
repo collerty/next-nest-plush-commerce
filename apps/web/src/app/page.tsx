@@ -3,11 +3,11 @@ import {headers} from "next/headers";
 import {fetcher} from "@/lib/fetcher";
 
 export default async function Home() {
-  const data = await fetcher(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
+  const products = await fetcher(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
     method: "GET",
     // headers: new Headers({'Authorization': 'Basic ' + cookies.get})
   });
-  const products: any[] = await data.json();
+  // const products: any[] = await data.json();
   console.log(products);
   return (
       <div className="w-full h-full flex flex-col">

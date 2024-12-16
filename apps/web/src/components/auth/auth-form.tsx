@@ -18,6 +18,7 @@ import {toast} from "sonner";
 import {redirect} from "next/navigation";
 import {useRouter} from "next/navigation";
 import {login} from "@/lib/actions";
+import {getAuthTokens} from "@/lib/fetcher";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
