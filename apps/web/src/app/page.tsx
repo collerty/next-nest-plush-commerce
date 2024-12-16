@@ -1,9 +1,10 @@
 import {Card, CardContent, CardFooter, CardHeader} from "@/components/ui/card";
 import {headers} from "next/headers";
 import {fetcher} from "@/lib/fetcher";
+import {apiUrl} from "@/lib/api-url";
 
 export default async function Home() {
-  const products = await fetcher(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
+  const products = await fetcher(`${apiUrl}/products`, {
     method: "GET",
     // headers: new Headers({'Authorization': 'Basic ' + cookies.get})
   });

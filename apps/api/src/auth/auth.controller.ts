@@ -33,8 +33,8 @@ export class AuthController {
     description: 'Successfully registered and returned access and refresh tokens.',
   })
   @ApiResponse({status: 400, description: 'User with this email or username already exists.'})
-  register(@Body() signUpDto: SignUpDto) {
-    return this.authService.signUp(signUpDto.username, signUpDto.email, signUpDto.password);
+  register(@Body() signUpDto: SignUpDto, @Res({passthrough: true}) res: any) {
+    return this.authService.signUp(signUpDto.username, signUpDto.email, signUpDto.password, res);
   }
 
   @Post('logout')
@@ -81,9 +81,24 @@ export class AuthController {
   @ApiOperation({summary: 'Google OAuth callback'})
   @ApiResponse({status: 200, description: 'OAuth login successful.'})
   @ApiResponse({status: 400, description: 'OAuth authentication failed.'})
-  async googleAuthRedirect(@Req() req: any, @Res() res: any) {
+  async googleAuthRedirect(@Req() req: any, @Res({passthrough: true}) res: any) {
     const tokens = await this.authService.socialLogin(req.user, 'google');
-    res.json(tokens);
+    const {accessToken, refreshToken} = tokens;
+    // res.json(tokens);
+    // const redirectUrl = `http://localhost:3000/auth/callback?token=${accessToken}`;
+    const redirectUrl = 'http://localhost:3000/';
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+    return res.redirect(redirectUrl);
   }
 
   @Public()

@@ -1,6 +1,7 @@
 'use server';
 
 import {cookies} from 'next/headers';
+import {apiUrl} from "@/lib/api-url";
 
 export async function fetcher(url, options = {}) {
   const {accessToken} = await getAuthTokens(); // Await for cookies API
@@ -42,7 +43,7 @@ export async function handleTokenRefresh() {
     if (!refreshToken) throw new Error('No refresh token available');
 
     // Send the request to refresh the token
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
+    const res = await fetch(`${apiUrl}/auth/refresh`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

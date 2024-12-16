@@ -1,8 +1,9 @@
 "use server";
 
 import {fetcher, setAuthTokens} from "@/lib/fetcher";
+import {apiUrl} from "@/lib/api-url";
 
-const url = process.env.NEXT_PUBLIC_API_URL;
+
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -22,7 +23,7 @@ interface Tokens {
 
 export async function login(body: LoginBody): Promise<ApiResponse<Tokens>> {
   try {
-    const data = await fetcher(`${url}/auth/login`, {
+    const data = await fetcher(`${apiUrl}/auth/login`, {
       method: 'POST',
       credentials: "include",
       body: JSON.stringify(body)
@@ -38,3 +39,4 @@ export async function login(body: LoginBody): Promise<ApiResponse<Tokens>> {
     return {success: false, error: error.response?.data?.message};
   }
 }
+

@@ -49,7 +49,7 @@ export class AuthService {
     };
   }
 
-  async signUp(username: string, email: string, pass: string): Promise<{
+  async signUp(username: string, email: string, pass: string, res: any): Promise<{
     accessToken: string,
     refreshToken: string
   }> {
@@ -64,7 +64,20 @@ export class AuthService {
     const payload = {sub: user.id, username: user.username, email: user.email};
     const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
     const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
+
     await this.updateRefreshToken(user.id, refreshToken);
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
 
     return {
       accessToken: accessToken,
@@ -110,8 +123,8 @@ export class AuthService {
 
       // Step 4: Generate new access and refresh tokens (JWT for access, random string for refresh)
       const newAccessToken = this.jwtService.sign(
-          { sub: user.id, email: user.email, username: user.username },
-          { expiresIn: '3600s' }
+          {sub: user.id, email: user.email, username: user.username},
+          {expiresIn: '3600s'}
       );
 
       const newRefreshToken = crypto.randomBytes(64).toString('hex'); // Generate a random string as a new refresh token
@@ -131,7 +144,7 @@ export class AuthService {
   // Update the refresh token by hashing it before saving to the DB
   async updateRefreshToken(userId: number, refreshToken: string) {
     // const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    await this.usersService.update(userId, { refreshToken: refreshToken });
+    await this.usersService.update(userId, {refreshToken: refreshToken});
   }
 
   async validateOAuthUser(profile: any, provider: string): Promise<User> {
