@@ -1,5 +1,6 @@
 import {LoginForm} from "@/components/auth/login-form";
 import {GalleryVerticalEnd} from "lucide-react";
+import {RegisterForm} from "@/components/auth/register-form";
 
 
 export default function Page() {
@@ -12,7 +13,7 @@ export default function Page() {
             </div>
             Plushes e-commerce
           </a>
-          <LoginForm/>
+          <RegisterForm/>
         </div>
       </div>
   )
