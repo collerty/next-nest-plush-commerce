@@ -116,6 +116,21 @@ export class AuthController {
   @ApiResponse({status: 400, description: 'OAuth authentication failed.'})
   async githubAuthRedirect(@Req() req: any, @Res() res: any) {
     const tokens = await this.authService.socialLogin(req.user, 'github');
-    res.json(tokens);
+    const {accessToken, refreshToken} = tokens;
+    // res.json(tokens);
+    // const redirectUrl = `http://localhost:3000/auth/callback?token=${accessToken}`;
+    const redirectUrl = 'http://localhost:3000/';
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+    return res.redirect(redirectUrl);
   }
 }
