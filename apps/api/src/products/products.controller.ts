@@ -3,6 +3,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {UpdateProductDto} from "./dto/update-product.dto";
 import {CreateProductDto} from "./dto/create-product.dto";
 import {ProductsService} from "./products.service";
+import {Public} from "../auth/public.decorator";
 
 @ApiTags('Products')
 @Controller('products')
@@ -17,6 +18,7 @@ export class ProductsController {
     return this.productService.create(createProductDto);
   }
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Get all products' })
   @ApiResponse({ status: 200, description: 'Returns a list of all products.' })
@@ -24,6 +26,7 @@ export class ProductsController {
     return this.productService.findAll();
   }
 
+  @Public()
   @Get('category/:id')
   @ApiOperation({ summary: 'Get products by category ID' })
   @ApiResponse({ status: 200, description: 'Returns a list of products in the specified category.' })
@@ -31,6 +34,7 @@ export class ProductsController {
     return this.productService.findAllByCategory(id);
   }
 
+  @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Get a product by ID' })
   @ApiResponse({ status: 200, description: 'Returns the specified product.' })

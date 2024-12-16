@@ -1,9 +1,9 @@
 'use server';
 
-import { cookies } from 'next/headers';
+import {cookies} from 'next/headers';
 
 export async function fetcher(url, options = {}) {
-  const { accessToken } = await getAuthTokens(); // Await for cookies API
+  const {accessToken} = await getAuthTokens(); // Await for cookies API
   const headers = {
     'Content-Type': 'application/json',
     Authorization: accessToken ? `Bearer ${accessToken}` : undefined,
@@ -11,7 +11,7 @@ export async function fetcher(url, options = {}) {
   };
 
   try {
-    const res = await fetch(url, { ...options, headers });
+    const res = await fetch(url, {...options, headers});
 
     if (res.status === 401) {
       // Attempt token refresh if unauthorized
@@ -19,7 +19,7 @@ export async function fetcher(url, options = {}) {
       return fetcher(url, options); // Retry request after refreshing token
     }
 
-    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+    if (!res.ok) return res.text().then(text => { throw new Error(text) })
     return res.json();
   } catch (err) {
     console.error('Error in fetcher:', err.message);
@@ -32,32 +32,49 @@ export async function getAuthTokens() {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get('accessToken');
   const refreshToken = cookieStore.get('refreshToken');
-  return { accessToken, refreshToken };
+  return {accessToken, refreshToken};
 }
 
 export async function handleTokenRefresh() {
-  const { refreshToken } = await getAuthTokens();
-  if (!refreshToken) throw new Error('No refresh token available');
+  try {
+    // Retrieve the refresh token
+    const {refreshToken} = await getAuthTokens();
+    if (!refreshToken) throw new Error('No refresh token available');
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ refreshToken }),
-    credentials: 'include', // Include cookies in the request
-  });
+    // Send the request to refresh the token
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        refreshToken: refreshToken?.value,
+      }),
+      credentials: 'include', // Include cookies in the request
+    });
 
-  if (!res.ok) throw new Error('Failed to refresh token');
-  const { accessToken } = await res.json();
+    // Check if the response is successful
+    if (!res.ok) return res.text().then(text => { throw new Error(text) })
 
-  return new Response('Token refreshed', {
-    status: 200,
-    headers: {
-      'Set-Cookie': `accessToken=${accessToken}; Path=/; HttpOnly; Secure; SameSite=Strict`,
-    },
-  });
+    // Parse the response JSON and extract the new access token
+    const {accessToken} = await res.json();
+
+    // Set the new access token in the cookies
+    return new Response('Token refreshed', {
+      status: 200,
+      headers: {
+        'Set-Cookie': `accessToken=${accessToken}; Path=/; HttpOnly; Secure; SameSite=Strict`,
+      },
+    });
+  } catch (error) {
+    // Log the error and throw it, or return a specific error response
+    console.error('Error refreshing token:', error);
+    throw new Error(`Token refresh failed: ${error.message || error}`);
+  }
 }
 
-export async function setAuthTokens(accessToken: string, refreshToken: string){
+
+export async function setAuthTokens(accessToken: string, refreshToken: string) {
   const cookieStore = await cookies();
 
   cookieStore.set('accessToken', accessToken, {

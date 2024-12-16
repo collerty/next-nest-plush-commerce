@@ -87,6 +87,8 @@ export class UsersService {
 
     Object.assign(user, updateUserDto);
 
+    console.log(user)
+
     return await this.usersRepository.save(user);
   }
 

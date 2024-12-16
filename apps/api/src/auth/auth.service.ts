@@ -2,6 +2,7 @@ import {Injectable, Res, UnauthorizedException} from '@nestjs/common';
 import {UsersService} from "../users/users.service";
 import {JwtService} from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 import {User} from "../users/entities/user.entity";
 
 @Injectable()
@@ -89,29 +90,33 @@ export class AuthService {
     return {message: 'Logged out successfully'}
   }
 
-  async updateRefreshToken(userId: number, refreshToken: string) {
-    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    await this.usersService.update(userId, {refreshToken: hashedRefreshToken});
-  }
-
   async refreshTokens(refreshToken: string) {
     try {
-      const payload = this.jwtService.verify(refreshToken);
-      const user = await this.usersService.findOneById(payload.sub);
+      // Step 1: Verify the JWT refresh token
+      const payload = this.jwtService.verify(refreshToken); // Verifies the integrity of the JWT
 
-      if (!user || !await bcrypt.compare(refreshToken, user.refreshToken)) {
-        throw new UnauthorizedException();
+      // Step 2: Retrieve the user from the database
+      const user = await this.usersService.findOneById(payload.sub);
+      if (!user) {
+        throw new UnauthorizedException('User not found');
       }
 
+      // Step 3: Compare the incoming refresh token with the hashed refresh token stored in the DB
+      const isValid = await bcrypt.compare(refreshToken, user.refreshToken);
+      console.log(isValid, refreshToken, user.refreshToken);
+      if (!isValid) {
+        throw new UnauthorizedException('Invalid refresh token');
+      }
+
+      // Step 4: Generate new access and refresh tokens (JWT for access, random string for refresh)
       const newAccessToken = this.jwtService.sign(
-          {sub: user.id, email: user.email, username: user.username},
-          {expiresIn: '3600s'},
+          { sub: user.id, email: user.email, username: user.username },
+          { expiresIn: '3600s' }
       );
 
-      const newRefreshToken = this.jwtService.sign(
-          {sub: user.id, email: user.email, username: user.username},
-          {expiresIn: '7d'},
-      );
+      const newRefreshToken = crypto.randomBytes(64).toString('hex'); // Generate a random string as a new refresh token
+
+      // Step 5: Hash the new refresh token before storing it in the database
       await this.updateRefreshToken(user.id, newRefreshToken);
 
       return {
@@ -123,12 +128,17 @@ export class AuthService {
     }
   }
 
+  // Update the refresh token by hashing it before saving to the DB
+  async updateRefreshToken(userId: number, refreshToken: string) {
+    // const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    await this.usersService.update(userId, { refreshToken: refreshToken });
+  }
+
   async validateOAuthUser(profile: any, provider: string): Promise<User> {
     return this.usersService.findOrCreateUser(profile, provider);
   }
 
   async generateJwtToken(user: User): Promise<string> {
-    ;
     return this.jwtService.sign(
         {sub: user.id, email: user.email, username: user.username},
         {expiresIn: '3600s'},

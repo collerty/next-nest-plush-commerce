@@ -21,7 +21,7 @@ export class AuthController {
     description: 'Successfully logged in and returned access and refresh tokens.',
   })
   @ApiResponse({status: 401, description: 'Invalid credentials.'})
-  login(@Body() signInDto: SignInDto, @Res({ passthrough: true }) res: any) {
+  login(@Body() signInDto: SignInDto, @Res({passthrough: true}) res: any) {
     return this.authService.signIn(signInDto.email, signInDto.password, res);
   }
 
@@ -55,6 +55,7 @@ export class AuthController {
     return req.user;
   }
 
+  @Public()
   @Post('refresh')
   @ApiOperation({summary: 'Refresh the access and refresh tokens'})
   @ApiResponse({

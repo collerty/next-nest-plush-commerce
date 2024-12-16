@@ -34,7 +34,7 @@ import { OrdersModule } from './orders/orders.module';
     UsersModule,
     AuthModule,
     CategoriesModule,
-    OrdersModule
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
