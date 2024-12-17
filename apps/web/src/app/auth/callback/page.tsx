@@ -5,6 +5,9 @@ import {getProfile} from "@/lib/actions";
 
 export default function Page() {
   return (
-      <div><Button onClick={() => console.log(getAuthTokens())}>Get profile</Button></div>
+      <div>
+        <Button onClick={() => console.log(getAuthTokens())}>Get auth tokens</Button>
+        <Button onClick={() => console.log(getProfile())}>Get profile</Button>
+      </div>
   )
 }

@@ -25,7 +25,7 @@ export class AuthService {
     }
 
     const {password, ...result} = user;
-    const payload = {sub: user.id, username: user.username, email: user.email};
+    const payload = {sub: user.id, email: user.email};
     const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
     const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
     console.log("Normal login generated refreshToken:", refreshToken);
@@ -63,7 +63,7 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(pass, 10);
     const user = await this.usersService.create({username, email, password: hashedPassword});
 
-    const payload = {sub: user.id, username: user.username, email: user.email};
+    const payload = {sub: user.id, email: user.email};
     const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
     const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
     console.log("Sign up generated refreshToken:", refreshToken);
@@ -88,8 +88,8 @@ export class AuthService {
   }
 
   async socialLogin(user: any, provider: string, res: any): Promise<{ accessToken: string, refreshToken: string }> {
-    const payload = {sub: user.id, username: user.username, email: user.email};
-    const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
+    const payload = {sub: user.id, email: user.email};
+    const accessToken = this.jwtService.sign(payload, {expiresIn: '30s'});
     const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
     console.log("Social login generated refreshToken:", refreshToken);
     await this.updateRefreshToken(user.id, refreshToken);
@@ -116,7 +116,7 @@ export class AuthService {
     return res.status(200).json({message: 'Logged out successfully'});
   }
 
-  async refreshTokens(refreshToken: string) {
+  async refreshTokens(refreshToken: string, res: any) {
     try {
       const payload = this.jwtService.verify(refreshToken);
 
@@ -129,15 +129,29 @@ export class AuthService {
       const isValid = refreshToken === user.refreshToken;
       console.log(isValid, refreshToken, user.refreshToken);
       if (!isValid) {
-        throw new UnauthorizedException('Invalid refresh token');
+        throw new UnauthorizedException('Invalid refresh token. Token is not valid.');
       }
 
-      const newAccessToken = this.jwtService.sign(payload, {expiresIn: '3600s'});
-      const newRefreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
+
+      const newPayload = { sub: user.id, email: user.email };
+
+      const newAccessToken = this.jwtService.sign(newPayload, { expiresIn: '3600s' });
+      const newRefreshToken = this.jwtService.sign(newPayload, { expiresIn: '7d' });
 
       console.log("Refresh generated refreshToken:", newRefreshToken);
       await this.updateRefreshToken(user.id, newRefreshToken);
 
+      res.cookie('accessToken', newAccessToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 60 * 60 * 1000, // 1 hour
+      });
+
+      res.cookie('refreshToken', newRefreshToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
       return {
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
@@ -150,6 +164,7 @@ export class AuthService {
 
   async updateRefreshToken(userId: number, refreshToken: string) {
     // const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    console.log("update refresh token", refreshToken);
     await this.usersService.update(userId, {refreshToken: refreshToken});
   }
 
@@ -159,7 +174,7 @@ export class AuthService {
 
   async generateJwtToken(user: User): Promise<string> {
     return this.jwtService.sign(
-        {sub: user.id, email: user.email, username: user.username},
+        {sub: user.id, email: user.email},
         {expiresIn: '3600s'},
     );
   }

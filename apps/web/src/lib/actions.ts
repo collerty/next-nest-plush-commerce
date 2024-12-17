@@ -56,17 +56,22 @@ export async function getProfile(): Promise<ApiResponse<any>> {
 }
 
 export async function logout(): Promise<void> {
-  const response = await fetch(`${apiUrl}/auth/logout`, {
+ try {
+
+  const response = await fetcher(`${apiUrl}/auth/logout`, {
     method: 'POST',
     credentials: 'include',
   });
 
-  if (!response.ok) {
-    console.error('Failed to logout');
-    return;
-  }
+  // if (!response.ok) {
+  //   console.error('Failed to logout');
+  //   return;
+  // }
 
   await clearAuthTokens();
+ } catch (e) {
+    console.log(e);
+ }
 
   // redirect("/");
 }

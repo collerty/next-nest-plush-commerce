@@ -2,6 +2,7 @@
 
 import {cookies} from "next/headers";
 import {apiUrl} from "@/lib/api-url";
+import {fetcher} from "@/lib/fetcher";
 
 export async function getAuthTokens() {
   const cookieStore = await cookies();
@@ -14,7 +15,8 @@ export async function handleTokenRefresh() {
   try {
     const {refreshToken} = await getAuthTokens();
     if (!refreshToken) throw new Error('No refresh token available');
-
+    console.log("handle token refresh", refreshToken)
+    console.log(`${apiUrl}/auth/refresh`, {refreshToken: refreshToken?.value});
     const res = await fetch(`${apiUrl}/auth/refresh`, {
       method: 'POST',
       headers: {
@@ -26,17 +28,17 @@ export async function handleTokenRefresh() {
       credentials: 'include', // Include cookies in the request
     });
 
-    if (!res.ok) return res.text().then(text => {
-      throw new Error(text)
-    })
+    if (!res.ok) {
+      throw new Error(('failed to refresh token', refreshToken.value));
+    }
 
-    const {accessToken} = await res.json();
+    const {accessToken, refreshToken: newRefreshToken} = await res.json();
+    console.log("new refreshToken", newRefreshToken);
+
+    await setAuthTokens(accessToken, newRefreshToken);
 
     return new Response('Token refreshed', {
       status: 200,
-      headers: {
-        'Set-Cookie': `accessToken=${accessToken}; Path=/; HttpOnly; Secure; SameSite=Strict`,
-      },
     });
   } catch (error) {
 

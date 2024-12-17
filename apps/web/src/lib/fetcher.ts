@@ -3,18 +3,21 @@
 import {getAuthTokens, handleTokenRefresh} from "@/lib/auth-tokens";
 
 export async function fetcher(url, options = {}) {
-  const {accessToken} = await getAuthTokens();
+  const {accessToken, refreshToken} = await getAuthTokens();
   const headers = {
     'Content-Type': 'application/json',
-    Authorization: accessToken ? `Bearer ${accessToken}` : undefined,
+    Authorization: accessToken ? `Bearer ${accessToken.value}` : undefined,
     ...options.headers,
   };
+
+  console.log(url, headers);
 
   try {
     const res = await fetch(url, {...options, headers});
 
-    if (res.status === 401) {
+    if (res.status === 401 && refreshToken) {
       // Attempt token refresh if unauthorized
+      console.log("Attempt token refresh")
       await handleTokenRefresh();
       return fetcher(url, options);
     }

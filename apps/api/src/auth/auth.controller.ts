@@ -37,10 +37,12 @@ export class AuthController {
     return this.authService.signUp(signUpDto.username, signUpDto.email, signUpDto.password, res);
   }
 
+
   @Post('logout')
   @ApiOperation({summary: 'Log out the current user'})
   @ApiResponse({status: 200, description: 'Successfully logged out.'})
   logOut(@Req() req: any, @Res() res: any) {
+    console.log("log out")
     return this.authService.logout(req, res);
   }
 
@@ -52,7 +54,7 @@ export class AuthController {
   })
   @ApiResponse({status: 401, description: 'Unauthorized.'})
   getProfile(@Req() req: any) {
-    console.log(req);
+    console.log("requsted profile");
     return req.user;
   }
 
@@ -64,8 +66,8 @@ export class AuthController {
     description: 'Successfully refreshed tokens.',
   })
   @ApiResponse({status: 401, description: 'Invalid or expired refresh token.'})
-  async refreshToken(@Body('refreshToken') refreshToken: string) {
-    const newTokens = await this.authService.refreshTokens(refreshToken);
+  async refreshToken(@Body('refreshToken') refreshToken: string, @Res() res: any) {
+    const newTokens = await this.authService.refreshTokens(refreshToken, res);
     return newTokens;
   }
 
