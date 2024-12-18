@@ -2,7 +2,7 @@
 
 import { fetcher} from "@/lib/fetcher";
 import {apiUrl} from "@/lib/api-url";
-import {clearAuthTokens, setAuthTokens} from "@/lib/auth-tokens";
+import {clearAuthTokens, getAuthTokens, setAuthTokens} from "@/lib/auth-tokens";
 import {redirect} from "next/navigation";
 
 
@@ -57,10 +57,15 @@ export async function getProfile(): Promise<ApiResponse<any>> {
 
 export async function logout(): Promise<void> {
  try {
-
-  const response = await fetcher(`${apiUrl}/auth/logout`, {
+   const {accessToken, refreshToken} = await getAuthTokens();
+   const headers = {
+     'Content-Type': 'application/json',
+     Authorization: accessToken ? `Bearer ${accessToken.value}` : undefined,
+   };
+  const response = await fetch(`${apiUrl}/auth/logout`, {
     method: 'POST',
     credentials: 'include',
+   ...headers
   });
 
   // if (!response.ok) {

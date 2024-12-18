@@ -50,7 +50,7 @@ export async function handleTokenRefresh() {
 
 export async function setAuthTokens(accessToken: string, refreshToken: string) {
   const cookieStore = await cookies();
-
+  console.log("set new auth cookies:", {accessToken, refreshToken});
   cookieStore.set('accessToken', accessToken, {
     httpOnly: true, // Prevent JavaScript access
     secure: process.env.NODE_ENV === 'production', // HTTPS only in production

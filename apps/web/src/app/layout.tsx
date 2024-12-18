@@ -21,12 +21,14 @@ export default function RootLayout({
   return (
       <html lang="en" className="h-full">
       <body className={clsx(GeistSans.className, "flex flex-col w-full h-full")}>
-      <header className="h-20 w-full flex gap-4 bg-red-400">
+      <header className="min-h-20 w-full flex gap-4 bg-red-400">
         <Link href={"/"}>Main</Link>
         <Link href={"/auth/callback"}>Callback</Link>
         <Link href={"/auth"}>Auth</Link>
-        <Profile/>
+        <Link href={"/protected"}>Protected</Link>
+        {/*<Profile/>*/}
         <LogoutButton/>
+
       </header>
       <main className="w-full h-full">
         {children}

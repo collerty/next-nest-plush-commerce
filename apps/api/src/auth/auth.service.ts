@@ -26,7 +26,7 @@ export class AuthService {
 
     const {password, ...result} = user;
     const payload = {sub: user.id, email: user.email};
-    const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
+    const accessToken = this.jwtService.sign(payload, {expiresIn: '30s'});
     const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
     console.log("Normal login generated refreshToken:", refreshToken);
 
@@ -64,7 +64,7 @@ export class AuthService {
     const user = await this.usersService.create({username, email, password: hashedPassword});
 
     const payload = {sub: user.id, email: user.email};
-    const accessToken = this.jwtService.sign(payload, {expiresIn: '60m'});
+    const accessToken = this.jwtService.sign(payload, {expiresIn: '30s'});
     const refreshToken = this.jwtService.sign(payload, {expiresIn: '7d'});
     console.log("Sign up generated refreshToken:", refreshToken);
     await this.updateRefreshToken(user.id, refreshToken);
@@ -135,7 +135,7 @@ export class AuthService {
 
       const newPayload = { sub: user.id, email: user.email };
 
-      const newAccessToken = this.jwtService.sign(newPayload, { expiresIn: '3600s' });
+      const newAccessToken = this.jwtService.sign(newPayload, { expiresIn: '30s' });
       const newRefreshToken = this.jwtService.sign(newPayload, { expiresIn: '7d' });
 
       console.log("Refresh generated refreshToken:", newRefreshToken);

@@ -19,6 +19,7 @@ export async function fetcher(url, options = {}) {
       // Attempt token refresh if unauthorized
       console.log("Attempt token refresh")
       await handleTokenRefresh();
+      console.log("recursive fetcher call after token refresh")
       return fetcher(url, options);
     }
 
