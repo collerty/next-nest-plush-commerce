@@ -27,11 +27,12 @@ export async function handleTokenRefresh() {
       }),
       credentials: 'include', // Include cookies in the request
     });
+    // console.log("res after refresh token", res);
 
     if (!res.ok) {
+      console.log("failed to refresh token");
       throw new Error(('failed to refresh token', refreshToken.value));
     }
-
     const {accessToken, refreshToken: newRefreshToken} = await res.json();
     console.log("new refreshToken", newRefreshToken);
 

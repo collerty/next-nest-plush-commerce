@@ -140,6 +140,7 @@ export class AuthService {
 
       console.log("Refresh generated refreshToken:", newRefreshToken);
       await this.updateRefreshToken(user.id, newRefreshToken);
+      // console.log("refresh token was updated");
 
       res.cookie('accessToken', newAccessToken, {
         httpOnly: true,
@@ -165,7 +166,7 @@ export class AuthService {
   async updateRefreshToken(userId: number, refreshToken: string) {
     // const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     console.log("update refresh token", refreshToken);
-    await this.usersService.update(userId, {refreshToken: refreshToken});
+    return await this.usersService.update(userId, {refreshToken: refreshToken});
   }
 
   async validateOAuthUser(profile: any, provider: string): Promise<User> {
