@@ -2,7 +2,6 @@
 
 import {cookies} from "next/headers";
 import {apiUrl} from "@/lib/api-url";
-import {fetcher} from "@/lib/fetcher";
 
 export async function getAuthTokens() {
   const cookieStore = await cookies();
@@ -31,7 +30,7 @@ export async function handleTokenRefresh() {
 
     if (!res.ok) {
       console.log("failed to refresh token");
-      throw new Error(('failed to refresh token', refreshToken.value));
+      throw new Error(`failed to refresh token: ${refreshToken.value}`);
     }
     const {accessToken, refreshToken: newRefreshToken} = await res.json();
     console.log("new refreshToken", newRefreshToken);
@@ -44,7 +43,7 @@ export async function handleTokenRefresh() {
   } catch (error) {
     console.error('Error refreshing token');
     await clearAuthTokens();
-    throw new Error(`Token refresh failed: ${error.message || error}`);
+    throw new Error(`Token refresh failed: ${(error as Error).message || error}`);
   }
 }
 

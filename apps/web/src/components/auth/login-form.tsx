@@ -1,5 +1,4 @@
 import {cn} from "@/lib/utils"
-import {Button} from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -15,7 +14,7 @@ export function LoginForm({
                             className,
                             ...props
                           }: React.ComponentPropsWithoutRef<"div">) {
-  const apiUrl = process.env.API_URL;
+  const apiUrl = process.env.API_URL!;
   return (
       <div className={cn("flex flex-col gap-6", className)} {...props}>
         <Card>

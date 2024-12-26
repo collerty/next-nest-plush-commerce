@@ -1,13 +1,8 @@
-import {Card, CardContent, CardFooter, CardHeader} from "@/components/ui/card";
-import {headers} from "next/headers";
-import {fetcher} from "@/lib/fetcher";
-import {apiUrl} from "@/lib/api-url";
-
 export default async function Home() {
-  const products = await fetcher(`${apiUrl}/products`, {
-    method: "GET",
-    // headers: new Headers({'Authorization': 'Basic ' + cookies.get})
-  });
+  // const products = await fetcher(`${apiUrl}/products`, {
+  //   method: "GET",
+  //   // headers: new Headers({'Authorization': 'Basic ' + cookies.get})
+  // });
   // const products: any[] = await data.json();
   // console.log(products);
   return (

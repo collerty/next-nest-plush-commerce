@@ -13,7 +13,7 @@ export default function Page() {
     console.log(tokens);
   }
   async function handleSetNotValidTokens() {
-    const tokens = await setAuthTokens("not a valid token", "not a valid token");
+    await setAuthTokens("not a valid token", "not a valid token");
     // console.log(tokens);
   }
   return (

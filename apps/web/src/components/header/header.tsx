@@ -37,48 +37,48 @@ export function Logo() {
 }
 
 
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Teddy Bears",
-    href: "/categories/teddy-bears",
-    description: "Classic and adorable teddy bears for all ages.",
-  },
-  {
-    title: "Unicorns",
-    href: "/categories/unicorns",
-    description: "Magical unicorn plushies in various sizes and colors.",
-  },
-  {
-    title: "Dinosaurs",
-    href: "/categories/dinosaurs",
-    description: "Roaringly fun dinosaur plush toys for young adventurers.",
-  },
-  {
-    title: "Fantasy Creatures",
-    href: "/categories/fantasy-creatures",
-    description: "Explore dragons, phoenixes, and other mythical creatures.",
-  },
-  {
-    title: "Marine Animals",
-    href: "/categories/marine-animals",
-    description: "Dive into the world of whales, dolphins, and more.",
-  },
-  {
-    title: "Kawaii Plush",
-    href: "/categories/kawaii-plush",
-    description: "Cute and squishy plushies inspired by Japanese culture.",
-  },
-  {
-    title: "Holiday Specials",
-    href: "/categories/holiday-specials",
-    description: "Seasonal plush toys perfect for gifts and decorations.",
-  },
-  {
-    title: "Giant Plushies",
-    href: "/categories/giant-plushies",
-    description: "Oversized plush toys for hugs and comfort.",
-  },
-];
+// const components: { title: string; href: string; description: string }[] = [
+//   {
+//     title: "Teddy Bears",
+//     href: "/categories/teddy-bears",
+//     description: "Classic and adorable teddy bears for all ages.",
+//   },
+//   {
+//     title: "Unicorns",
+//     href: "/categories/unicorns",
+//     description: "Magical unicorn plushies in various sizes and colors.",
+//   },
+//   {
+//     title: "Dinosaurs",
+//     href: "/categories/dinosaurs",
+//     description: "Roaringly fun dinosaur plush toys for young adventurers.",
+//   },
+//   {
+//     title: "Fantasy Creatures",
+//     href: "/categories/fantasy-creatures",
+//     description: "Explore dragons, phoenixes, and other mythical creatures.",
+//   },
+//   {
+//     title: "Marine Animals",
+//     href: "/categories/marine-animals",
+//     description: "Dive into the world of whales, dolphins, and more.",
+//   },
+//   {
+//     title: "Kawaii Plush",
+//     href: "/categories/kawaii-plush",
+//     description: "Cute and squishy plushies inspired by Japanese culture.",
+//   },
+//   {
+//     title: "Holiday Specials",
+//     href: "/categories/holiday-specials",
+//     description: "Seasonal plush toys perfect for gifts and decorations.",
+//   },
+//   {
+//     title: "Giant Plushies",
+//     href: "/categories/giant-plushies",
+//     description: "Oversized plush toys for hugs and comfort.",
+//   },
+// ];
 
 
 export function NavigationMenuDemo() {
@@ -138,7 +138,7 @@ export function NavigationMenuDemo() {
           <NavigationMenuItem>
             <Link href="/products" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                All Products
+                Products
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>

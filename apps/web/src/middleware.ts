@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import {cookies} from "next/headers";
 import {getAuthTokens} from "@/lib/auth-tokens";
 
 // This function can be marked `async` if using `await` inside
@@ -18,6 +17,7 @@ export async function middleware(request: NextRequest) {
 
 
   } catch (err) {
+    console.log(err)
     return NextResponse.redirect(new URL('/auth', request.url));
   }
 

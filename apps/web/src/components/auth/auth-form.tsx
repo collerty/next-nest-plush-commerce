@@ -15,10 +15,7 @@ import {
 } from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
 import {toast} from "sonner";
-import {redirect} from "next/navigation";
-import {useRouter} from "next/navigation";
 import {login} from "@/lib/actions";
-import {getAuthTokens} from "@/lib/fetcher";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -29,7 +26,7 @@ const FormSchema = z.object({
 
 export function AuthForm() {
 
-  const router = useRouter();
+  // const router = useRouter();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -38,27 +35,29 @@ export function AuthForm() {
     },
   })
 
+// eslint-disable no-unused-vars
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
+      console.log(data)
       const res = await login({
         email: "test123@gmail.com",
         password: "test123"
       });
-      const data = res.data;
-      console.log({data});
+
       toast.success("Logged in", {
         description: (
             <div>
-              <span>{data?.accessToken}</span>
-              <span> {data?.refreshToken}</span>
+              <span>{res.data?.accessToken}</span>
+              <span> {res.data?.refreshToken}</span>
             </div>
-        )
-      })
+        ),
+      });
       // router.push("/");
     } catch (e) {
       toast.error(`${e}`);
     }
   }
+
 
   return (
       <Form {...form}>

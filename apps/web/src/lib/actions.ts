@@ -1,9 +1,8 @@
 "use server";
 
-import { fetcher} from "@/lib/fetcher";
+import {fetcher} from "@/lib/fetcher";
 import {apiUrl} from "@/lib/api-url";
 import {clearAuthTokens, getAuthTokens, setAuthTokens} from "@/lib/auth-tokens";
-import {redirect} from "next/navigation";
 
 
 export interface ApiResponse<T> {
@@ -37,11 +36,13 @@ export async function login(body: LoginBody): Promise<ApiResponse<Tokens>> {
 
 
     return {success: true, data: data};
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
   } catch (error: any) {
-    return {success: false, error: error.response?.data?.message};
+    return {success: false, error: error};
   }
 }
 
+/* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
 export async function getProfile(): Promise<ApiResponse<any>> {
   try {
     const data = await fetcher(`${apiUrl}/auth/profile`, {
@@ -50,33 +51,30 @@ export async function getProfile(): Promise<ApiResponse<any>> {
     });
 
     return {success: true, data: data};
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
   } catch (error: any) {
-    return {success: false, error: error.response?.data?.message};
+    return {success: false, error: error};
   }
 }
 
 export async function logout(): Promise<void> {
- try {
-   const {accessToken, refreshToken} = await getAuthTokens();
-   const headers = {
-     'Content-Type': 'application/json',
-     Authorization: accessToken ? `Bearer ${accessToken.value}` : undefined,
-   };
-  const response = await fetch(`${apiUrl}/auth/logout`, {
-    method: 'POST',
-    credentials: 'include',
-   ...headers
-  });
+  try {
+    const {accessToken} = await getAuthTokens();
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: accessToken ? `Bearer ${accessToken.value}` : undefined,
+    };
+    await fetch(`${apiUrl}/auth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+      ...headers
+    });
 
-  // if (!response.ok) {
-  //   console.error('Failed to logout');
-  //   return;
-  // }
+    await clearAuthTokens();
 
-  await clearAuthTokens();
- } catch (e) {
+  } catch (e) {
     console.log(e);
- }
+  }
 
   // redirect("/");
 }

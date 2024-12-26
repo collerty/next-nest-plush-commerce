@@ -2,7 +2,9 @@
 
 import {getAuthTokens, handleTokenRefresh} from "@/lib/auth-tokens";
 
-export async function fetcher(url, options = {}) {
+
+/* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+export async function fetcher(url: string, options: any = {}) {
   const {accessToken, refreshToken} = await getAuthTokens();
   const headers = {
     'Content-Type': 'application/json',
@@ -27,7 +29,8 @@ export async function fetcher(url, options = {}) {
       throw new Error(text)
     })
     return res.json();
-  } catch (err) {
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+  } catch (err: any) {
     console.error('Error in fetcher:', err.message);
     throw err;
   }
