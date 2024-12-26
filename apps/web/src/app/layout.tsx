@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
+import type {Metadata} from "next";
 import "./globals.css";
-import { clsx } from "clsx";
-import { GeistSans } from 'geist/font/sans';
+import {clsx} from "clsx";
+import {GeistSans} from 'geist/font/sans';
 import {Toaster} from "sonner";
-
+import {Header} from "@/components/header/header";
 
 
 export const metadata: Metadata = {
@@ -19,7 +19,8 @@ export default function RootLayout({
   return (
       <html lang="en" className="h-full">
       <body className={clsx(GeistSans.className, "flex flex-col w-full h-full")}>
-      <main className="w-full h-full">
+      <Header/>
+      <main className="w-full h-full px-40">
         {children}
       </main>
       <Toaster/>
