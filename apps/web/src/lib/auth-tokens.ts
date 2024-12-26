@@ -42,8 +42,8 @@ export async function handleTokenRefresh() {
       status: 200,
     });
   } catch (error) {
-
-    console.error('Error refreshing token:', error);
+    console.error('Error refreshing token');
+    await clearAuthTokens();
     throw new Error(`Token refresh failed: ${error.message || error}`);
   }
 }
