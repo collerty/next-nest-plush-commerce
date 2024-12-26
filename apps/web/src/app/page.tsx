@@ -12,21 +12,22 @@ export default async function Home() {
   // console.log(products);
   return (
       <div className="w-full h-full flex flex-col">
-        <div className="flex">
-          {/* eslint-disable-next-line*/}
-          {products.map((product: any) => {
-            return (
-                <Card key={product.id}>
-                  {/*<CardTitle>{products.name}</CardTitle>*/}
-                  <CardHeader>{product.id}</CardHeader>
-                  <CardContent>{product.name}</CardContent>
-                  <CardFooter>{product.price}</CardFooter>
-                  {/*<CardDescription>Card description</CardDescription>*/}
-                </Card>
-            )
-          })}
+        Under construction...
+        {/*<div className="flex">*/}
+        {/*  /!* eslint-disable-next-line*!/*/}
+        {/*  {products.map((product: any) => {*/}
+        {/*    return (*/}
+        {/*        <Card key={product.id}>*/}
+        {/*          /!*<CardTitle>{products.name}</CardTitle>*!/*/}
+        {/*          <CardHeader>{product.id}</CardHeader>*/}
+        {/*          <CardContent>{product.name}</CardContent>*/}
+        {/*          <CardFooter>{product.price}</CardFooter>*/}
+        {/*          /!*<CardDescription>Card description</CardDescription>*!/*/}
+        {/*        </Card>*/}
+        {/*    )*/}
+        {/*  })}*/}
 
-        </div>
+        {/*</div>*/}
       </div>
   );
 }
