@@ -1,9 +1,9 @@
-import {Products} from "@/components/products/products";
+import {ProductCards} from "@/components/products/products";
 
 export default function Page() {
   return (
-      <div className="py-8">
-        <Products/>
+      <div className="">
+        <ProductCards/>
       </div>
   )
 }
