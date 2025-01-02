@@ -6,18 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import {Product} from "@/lib/types";
 
-
-const products: Product[] = [
-  { id: '1', name: 'Cute Capybara Plush', category: 'Plush', price: 24.99, rating: 4.5, image: '/capybara_cute.webp' },
-  { id: '2', name: 'Cute Capybara Plush', category: 'Plush', price: 24.99, rating: 4.5, image: '/capybara_cute.webp' },
-  { id: '3', name: 'ana Plush', category: 'Plush', price: 24.99, rating: 4.5, image: '/capybara_cute.webp' },
-  { id: '4', name: 'Cute Capybara Plush', category: 'Plush', price: 24.99, rating: 4.5, image: '/capybara_cute.webp' },
-  { id: '5', name: 'Cute Capybara Plush', category: 'Plush', price: 24.99, rating: 4.5, image: '/capybara_cute.webp' },
-  { id: '6', name: 'Cute Capybara Plush', category: 'Plush', price: 24.99, rating: 4.5, image: '/capybara_cute.webp' },
-  { id: '7', name: 'Cute Capybara Plush', category: 'Plush', price: 24.99, rating: 4.5, image: '/capybara_cute.webp' },
-]
-
-export function ProductCards() {
+export function ProductCards({products} : {products: Product[]}) {
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('name')
 
@@ -26,7 +15,7 @@ export function ProductCards() {
     return products
         .filter(product =>
             product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product.category.toLowerCase().includes(searchTerm.toLowerCase())
+            product.category.name.toLowerCase().includes(searchTerm.toLowerCase())
         )
         .sort((a, b) => {
           if (sortBy === 'price') return a.price - b.price

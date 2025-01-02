@@ -9,20 +9,20 @@ import {Product} from "@/lib/types";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
-      <Card className="overflow-hidden transition-all hover:shadow-lg">
+      <Card className="group overflow-hidden transition-all hover:shadow-lg">
         <Link href={`/products/${product.id}`} className="block">
           <div className="relative aspect-square overflow-hidden">
-            <Image
-                src={product.image}
+            {product.images[0] && <Image
+                src={product.images[0]}
                 alt={product.name}
-                className="object-cover transition-transform hover:scale-105"
+                className="object-cover transition-transform ease-in-out duration-300 transform origin-center group-hover:scale-125"
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
+            />}
           </div>
           <CardContent className="p-4">
             <Badge variant="secondary" className="mb-2">
-              {product.category}
+              {product.category?.name}
             </Badge>
             <h3 className="font-semibold text-lg mb-1 truncate">{product.name}</h3>
             <div className="flex items-center mb-2">

@@ -1,24 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import {useState} from 'react'
 import Image from 'next/image'
 // import { StarIcon } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {Button} from '@/components/ui/button'
+import {Card, CardContent} from '@/components/ui/card'
+import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
 import {StarRating} from "@/components/icons/star";
 
-interface ProductProps {
-  id: string
-  name: string
-  description: string
-  price: number
-  rating: number
-  images: string[]
-}
+import {Product} from "@/lib/types";
 
-export function Product({ id, name, description, price, rating, images }: ProductProps) {
-  const [selectedImage, setSelectedImage] = useState(images[0])
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function Product({id, name, description, price, rating, images}: Product) {
+  const [selectedImage, setSelectedImage] = useState<string>(images[0])
 
   return (
       <div className="w-full min-h-screen flex justify-center ">
@@ -28,13 +22,13 @@ export function Product({ id, name, description, price, rating, images }: Produc
               {/* Images */}
               <div className="basis-full lg:basis-[calc(50%-2rem)] flex flex-col gap-4">
                 <div className="w-full aspect-square relative overflow-hidden rounded-lg">
-                  <Image
+                  {selectedImage && <Image
                       src={selectedImage}
                       alt={name}
                       className="object-contain object-center"
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />
+                  />}
                 </div>
                 <div className="flex gap-4 overflow-x-auto pb-2 justify-center">
                   {images.map((img, index) => (
@@ -63,7 +57,7 @@ export function Product({ id, name, description, price, rating, images }: Produc
                   <h1 className="font-semibold text-3xl">{name}</h1>
                   <div className="flex items-center gap-2">
                     <div className="flex">
-                      <StarRating rating={rating} />
+                      <StarRating rating={rating}/>
                     </div>
                     <span className="text-sm text-gray-600">({rating.toFixed(1)})</span>
                   </div>

@@ -20,6 +20,10 @@ export class CreateProductDto {
   @IsString()
   description?: string;
 
+  @IsOptional()
+  @IsNumber()
+  rating?: number;
+
   @ApiProperty({
     description: 'Images associated with the product',
     type: () => [String],

@@ -1,8 +1,16 @@
 import {Product} from "@/components/products/product";
+import {getProductById} from "@/lib/actions";
 
-export default function Page({ params }: { params: { id: string } }) {
+export default async function Page({params,}: { params: Promise<{ id: string }> }) {
+  const id = (await params).id;
+  const data = await getProductById(id);
+  console.log(data.data);
+  const dataWithRating = {
+    ...data.data,
+    rating: 5
+  }
   const productData = {
-    id: params.id,
+    id: (await params).id,
     name: "Cute Capybara Plush",
     description: "Adorable and soft capybara plush toy, perfect for cuddling and decorating your space. Made with high-quality materials for long-lasting enjoyment.",
     price: 24.99,
@@ -14,6 +22,6 @@ export default function Page({ params }: { params: { id: string } }) {
     ]
   }
   return (
-      <Product {...productData} />
+      <Product {...dataWithRating} />
   )
 }

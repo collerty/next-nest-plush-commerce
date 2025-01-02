@@ -1,9 +1,12 @@
 import {ProductCards} from "@/components/products/product-cards";
+import {getAllProducts} from "@/lib/actions";
 
-export default function Page() {
+export default async function Page() {
+  const data = await getAllProducts();
+  console.log(data.data)
   return (
       <div className="">
-        <ProductCards/>
+        <ProductCards products={data.data}/>
       </div>
   )
 }

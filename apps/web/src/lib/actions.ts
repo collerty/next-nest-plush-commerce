@@ -79,3 +79,28 @@ export async function logout(): Promise<void> {
   // redirect("/");
 }
 
+export async function getProductById(id: string): Promise<ApiResponse<any>> { // TODO: add Product type
+  try {
+    const data = await fetcher(`${apiUrl}/products/${id}`, {
+      method: 'GET'
+    });
+
+    return {success: true, data: data};
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+  } catch (error: any) {
+    return {success: false, error: error};
+  }
+}
+
+export async function getAllProducts(): Promise<ApiResponse<any>> {// TODO: add Product type
+  try {
+    const data = await fetcher(`${apiUrl}/products`, {
+      method: 'GET'
+    });
+
+    return {success: true, data: data};
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+  } catch (error: any) {
+    return {success: false, error: error};
+  }
+}
