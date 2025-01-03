@@ -1,4 +1,4 @@
-import {Product} from "@/components/products/product";
+import {Product, ProductSkeleton} from "@/components/products/product";
 import {getProductById} from "@/lib/actions";
 
 export default async function Page({params,}: { params: Promise<{ id: string }> }) {
@@ -13,5 +13,6 @@ export default async function Page({params,}: { params: Promise<{ id: string }> 
   }
   return (
       <Product {...product.data} />
+      // <ProductSkeleton/>
   )
 }

@@ -2,9 +2,9 @@ import {Button} from '@/components/ui/button'
 import {Card, CardContent} from '@/components/ui/card'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
 import {StarRating} from "@/components/icons/star";
-
 import {Product as ProductProps} from "@/lib/types";
 import {ProductImages} from "@/components/products/product-images";
+// import {cn} from "@/lib/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function Product({id, name, description, price, rating, images}: ProductProps) {
@@ -107,18 +107,30 @@ export function ProductSkeleton() {
                   <div className="h-8 w-1/3 bg-gray-200 rounded animate-pulse"></div>
                 </div>
 
-                <Tabs defaultValue="description" className="w-full">
-                  <TabsList>
-                    <TabsTrigger value="description" disabled className="h-8 w-24 bg-gray-200 rounded animate-pulse"></TabsTrigger>
-                    <TabsTrigger value="details" disabled className="h-8 w-24 bg-gray-200 rounded animate-pulse"></TabsTrigger>
-                    <TabsTrigger value="shipping" disabled className="h-8 w-24 bg-gray-200 rounded animate-pulse"></TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="description" className="mt-4">
-                    <div className="h-4 w-full bg-gray-200 rounded animate-pulse mb-2"></div>
-                    <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse mb-2"></div>
-                    <div className="h-4 w-1/2 bg-gray-200 rounded animate-pulse"></div>
-                  </TabsContent>
-                </Tabs>
+                <div className="w-full">
+                  {/* Static Tabs List */}
+                  <div
+                      className="inline-flex w-[16.25rem] h-10 items-center justify-start rounded-md bg-gray-200 animate-pulse p-1 text-muted-foreground">
+                    {/*{[...Array(3)].map((_, i) => (*/}
+                    {/*    <button*/}
+                    {/*        key={i}*/}
+                    {/*        className={cn(i === 0 ? "bg-background text-foreground shadow-sm w-[6.25rem] h-full" : "", "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all pointer-events-none opacity-50")}*/}
+                    {/*    ></button>*/}
+                    {/*))}*/}
+                    <span
+                        className={"bg-background text-foreground shadow-sm w-[6.25rem] h-full inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all pointer-events-none opacity-50"}
+                    ></span>
+                  </div>
+
+                  <div className="flex flex-col gap-2 mt-4">
+                    {[...Array(3)].map((_, i) => (
+                        <div
+                            key={i}
+                            className={`h-4 ${i === 2 ? 'w-1/2' : 'w-full'} bg-gray-200 rounded animate-pulse`}
+                        ></div>
+                    ))}
+                  </div>
+                </div>
 
                 <div className="flex gap-4 mt-4">
                   <div className="h-12 w-full bg-gray-200 rounded animate-pulse"></div>
