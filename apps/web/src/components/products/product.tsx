@@ -1,54 +1,20 @@
-'use client'
-
-import {useState} from 'react'
-import Image from 'next/image'
-// import { StarIcon } from 'lucide-react'
 import {Button} from '@/components/ui/button'
 import {Card, CardContent} from '@/components/ui/card'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
 import {StarRating} from "@/components/icons/star";
 
 import {Product as ProductProps} from "@/lib/types";
+import {ProductImages} from "@/components/products/product-images";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function Product({id, name, description, price, rating, images}: ProductProps) {
-  const [selectedImage, setSelectedImage] = useState<string>(images[0])
-
   return (
       <div className="w-full min-h-screen flex justify-center ">
         <Card className="w-full max-w-7xl shadow-none border-none">
           <CardContent className="p-6 sm:p-10">
             <div className="flex flex-col lg:flex-row gap-8">
-              {/* Images */}
               <div className="basis-full lg:basis-[calc(50%-2rem)] flex flex-col gap-4">
-                <div className="w-full aspect-square relative overflow-hidden rounded-lg">
-                  {selectedImage && <Image
-                      src={selectedImage}
-                      alt={name}
-                      className="object-contain object-center"
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />}
-                </div>
-                <div className="flex gap-4 overflow-x-auto pb-2 justify-center">
-                  {images.map((img, index) => (
-                      <button
-                          key={index}
-                          className={`relative w-24 h-24 border-2 rounded-lg overflow-hidden flex-shrink-0 transition-all ${
-                              selectedImage === img ? 'border-primary' : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                          onClick={() => setSelectedImage(img)}
-                      >
-                        <Image
-                            src={img}
-                            alt={`${name} thumbnail ${index + 1}`}
-                            className="object-cover"
-                            fill
-                            sizes="96px"
-                        />
-                      </button>
-                  ))}
-                </div>
+                <ProductImages images={images} name={name}/>
               </div>
 
               {/* Description */}
@@ -88,7 +54,6 @@ export function Product({id, name, description, price, rating, images}: ProductP
                     </p>
                   </TabsContent>
                 </Tabs>
-
                 <div className="flex gap-4 mt-4">
                   <Button size="lg" className="flex-1">
                     Add to Cart
@@ -105,3 +70,64 @@ export function Product({id, name, description, price, rating, images}: ProductP
   )
 }
 
+export function ProductSkeleton() {
+  return (
+      <div className="w-full min-h-screen flex justify-center">
+        <Card className="w-full max-w-7xl shadow-none border-none">
+          <CardContent className="p-6 sm:p-10">
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Image Skeleton */}
+              <div className="basis-full lg:basis-[calc(50%-2rem)] flex flex-col gap-4">
+                <div className="w-full aspect-square relative overflow-hidden rounded-lg bg-gray-200 animate-pulse"></div>
+                <div className="flex gap-4 overflow-x-auto pb-2 justify-center">
+                  {[...Array(5)].map((_, index) => (
+                      <div
+                          key={index}
+                          className="relative w-24 h-24 border-2 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 animate-pulse"
+                      ></div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Description Skeleton */}
+              <div className="basis-full lg:basis-[calc(50%-2rem)] flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                  <div className="h-8 w-3/4 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-1">
+                      {[...Array(5)].map((_, i) => (
+                          <div
+                              key={i}
+                              className="w-5 h-5 bg-gray-200 rounded-full animate-pulse"
+                          ></div>
+                      ))}
+                    </div>
+                    <div className="h-4 w-12 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                  <div className="h-8 w-1/3 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+
+                <Tabs defaultValue="description" className="w-full">
+                  <TabsList>
+                    <TabsTrigger value="description" disabled className="h-8 w-24 bg-gray-200 rounded animate-pulse"></TabsTrigger>
+                    <TabsTrigger value="details" disabled className="h-8 w-24 bg-gray-200 rounded animate-pulse"></TabsTrigger>
+                    <TabsTrigger value="shipping" disabled className="h-8 w-24 bg-gray-200 rounded animate-pulse"></TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="description" className="mt-4">
+                    <div className="h-4 w-full bg-gray-200 rounded animate-pulse mb-2"></div>
+                    <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                    <div className="h-4 w-1/2 bg-gray-200 rounded animate-pulse"></div>
+                  </TabsContent>
+                </Tabs>
+
+                <div className="flex gap-4 mt-4">
+                  <div className="h-12 w-full bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-12 w-full bg-gray-200 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+  );
+}
