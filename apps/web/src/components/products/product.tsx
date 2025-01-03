@@ -8,10 +8,10 @@ import {Card, CardContent} from '@/components/ui/card'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
 import {StarRating} from "@/components/icons/star";
 
-import {Product} from "@/lib/types";
+import {Product as ProductProps} from "@/lib/types";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function Product({id, name, description, price, rating, images}: Product) {
+export function Product({id, name, description, price, rating, images}: ProductProps) {
   const [selectedImage, setSelectedImage] = useState<string>(images[0])
 
   return (

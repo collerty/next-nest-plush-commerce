@@ -7,5 +7,4 @@ build
 .turbo
 .next
 bun.lockb
-
-
+.idea

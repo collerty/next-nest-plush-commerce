@@ -1,12 +1,12 @@
 import {ProductCards} from "@/components/products/product-cards";
-import {getAllProducts} from "@/lib/actions";
+import {ApiResponse, getAllProducts} from "@/lib/actions";
+import {Product} from "@/lib/types";
 
 export default async function Page() {
-  const data = await getAllProducts();
-  console.log(data.data)
+  const products: ApiResponse<Product[]> = await getAllProducts();
   return (
       <div className="">
-        <ProductCards products={data.data}/>
+        {!products.error && <ProductCards products={products.data!}/>}
       </div>
   )
 }

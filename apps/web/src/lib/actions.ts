@@ -3,6 +3,7 @@
 import {fetcher} from "@/lib/fetcher";
 import {apiUrl} from "@/lib/api-url";
 import {clearAuthTokens, getAuthTokens, setAuthTokens} from "@/lib/auth-tokens";
+import {Product} from "@/lib/types";
 
 
 export interface ApiResponse<T> {
@@ -79,7 +80,7 @@ export async function logout(): Promise<void> {
   // redirect("/");
 }
 
-export async function getProductById(id: string): Promise<ApiResponse<any>> { // TODO: add Product type
+export async function getProductById(id: string): Promise<ApiResponse<Product>> {
   try {
     const data = await fetcher(`${apiUrl}/products/${id}`, {
       method: 'GET'
@@ -92,7 +93,7 @@ export async function getProductById(id: string): Promise<ApiResponse<any>> { //
   }
 }
 
-export async function getAllProducts(): Promise<ApiResponse<any>> {// TODO: add Product type
+export async function getAllProducts(): Promise<ApiResponse<Product[]>> {
   try {
     const data = await fetcher(`${apiUrl}/products`, {
       method: 'GET'
