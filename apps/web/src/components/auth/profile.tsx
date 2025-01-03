@@ -5,7 +5,7 @@ export async function Profile() {
   console.log("profile:", profile);
   return (
       <div>
-        {profile ? profile.data.id : "No profile"}
+        {profile ? profile.data?.id : "No profile"}
       </div>
   )
 }

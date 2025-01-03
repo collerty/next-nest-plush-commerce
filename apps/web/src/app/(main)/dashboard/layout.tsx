@@ -16,7 +16,7 @@ const tabs = [
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
-
+  console.log("DashboardLayout rendered, pathname:", pathname);
   return (
       <div className="w-full max-w-7xl mx-auto min-h-screen flex flex-col">
         <nav className="bg-background border-b">
@@ -27,7 +27,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     className="flex-1"
                     initial={false}
                     animate={{
-                      backgroundColor: pathname === item.path ? "var(--background)" : "transparent",
+                      backgroundColor: pathname === item.path ? "var(WA--background)" : "transparent",
                     }}
                 >
                   <button
@@ -51,10 +51,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <AnimatePresence mode="wait">
             <motion.div
                 key={pathname}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.2 }}
+                // initial={{ opacity: 0, y: 20 }}
+                // animate={{ opacity: 1, y: 0 }}
+                // exit={{ opacity: 0, y: -20 }}
+                // transition={{ duration: 0.2 }}
             >
               {children}
             </motion.div>

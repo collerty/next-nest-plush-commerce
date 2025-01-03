@@ -35,8 +35,9 @@ import Image from "next/image";
 import Link from "next/link";
 import {LogoutButton} from "@/components/auth/logout-button";
 import {logout} from "@/lib/actions";
+import {User as UserType} from "@/lib/types";
 
-export function UserAccount({user}: { user: User }) {
+export function UserAccount({user}: { user: UserType }) {
   // console.log(user);
   return (
       <DropdownMenu>
@@ -89,7 +90,7 @@ export function UserAccount({user}: { user: User }) {
           <DropdownMenuSeparator/>
           <DropdownMenuItem onClick={() => logout()} asChild>
             <div>
-              <LogOut className='mr-2 h-4 w-4' aria-hidden='true' />
+              <LogOut className='mr-2 h-4 w-4' aria-hidden='true'/>
               Logout
             </div>
           </DropdownMenuItem>
