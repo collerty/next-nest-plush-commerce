@@ -37,7 +37,7 @@ export class ProductsService {
 
   findAll(): Promise<Product[]> {
     console.log("find all")
-    return this.productsRepository.find();
+    return this.productsRepository.find({relations: ['category'],});
   }
 
   findAllByCategory(id: number): Promise<Product[]> {

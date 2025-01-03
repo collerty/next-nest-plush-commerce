@@ -11,6 +11,9 @@ export class Product {
   @Column({type: "varchar", length: 30})
   name: string;
 
+  @Column({type: "float", default: 5})
+  rating: number;
+
   @Column({nullable: true})
   description?: string;
 
