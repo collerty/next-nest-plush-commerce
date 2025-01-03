@@ -1,5 +1,6 @@
 import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
 import { ApiProperty } from '@nestjs/swagger';
+import {Optional} from "@nestjs/common";
 
 export class SignUpDto {
   @ApiProperty({
@@ -25,4 +26,10 @@ export class SignUpDto {
   @IsNotEmpty()
   @MinLength(6)
   password: string;
+
+  @ApiProperty({
+    description: 'Profile icon',
+  })
+  @Optional()
+  profileIcon?: string;
 }

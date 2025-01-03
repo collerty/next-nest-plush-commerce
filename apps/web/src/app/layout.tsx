@@ -19,10 +19,9 @@ export default function RootLayout({
   return (
       <html lang="en" className="h-full">
       <body className={clsx(GeistSans.className, "flex flex-col w-full h-full")}>
-      <Header/>
-      <main className="w-full h-full px-10 lg:px-20 xl:px-40 py-8">
+      <div>
         {children}
-      </main>
+      </div>
       <Toaster/>
       </body>
       </html>

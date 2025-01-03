@@ -54,8 +54,9 @@ export class AuthController {
   })
   @ApiResponse({status: 401, description: 'Unauthorized.'})
   getProfile(@Req() req: any) {
-    console.log("requsted profile");
-    return req.user;
+    console.log("requested profile");
+    const {password, ...user} = req.user;
+    return user;
   }
 
   @Public()
@@ -66,7 +67,7 @@ export class AuthController {
     description: 'Successfully refreshed tokens.',
   })
   @ApiResponse({status: 401, description: 'Invalid or expired refresh token.'})
-  async refreshToken(@Body('refreshToken') refreshToken: string, @Res({ passthrough: true }) res: any) {
+  async refreshToken(@Body('refreshToken') refreshToken: string, @Res({passthrough: true}) res: any) {
     const newTokens = await this.authService.refreshTokens(refreshToken, res);
     return newTokens;
   }

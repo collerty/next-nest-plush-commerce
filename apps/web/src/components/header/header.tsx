@@ -2,9 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-
 import {cn} from "@/lib/utils"
-// import { Icons } from "@/components/icons"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -15,12 +13,25 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import Image from "next/image";
+import {User} from "@/lib/types";
+import {Button} from "@/components/ui/button";
+import {UserAccount} from "@/components/header/user-account";
+import {ApiResponse} from "@/lib/actions";
 
-export function Header() {
+export function Header({user}: { user: ApiResponse<User> }) {
   return (
       <div className="w-full py-4 border-b flex gap-8 px-10 lg:px-20 xl:px-40">
         <Logo/>
-        <NavigationMenuDemo />
+        <NavigationMenuDemo/>
+        <div className="w-full flex justify-end items-center">
+          {user.data ? <UserAccount user={user.data}/> :
+              <Link href={"/auth/sign-in"}>
+                <Button>
+                  Sign In
+                </Button>
+              </Link>
+          }
+        </div>
       </div>
   )
 }
@@ -28,9 +39,9 @@ export function Header() {
 export function Logo() {
   return (
       <Link href={"/"} className="flex gap-4 items-center">
-      <div className="w-10 h-10 relative">
-        <Image src={"/logo2.png"} alt={"capybara_cute"} className="object-contain object-left" fill/>
-      </div>
+        <div className="w-10 h-10 relative">
+          <Image src={"/logo2.png"} alt={"capybara_cute"} className="object-contain object-left" fill/>
+        </div>
         <span className="font-bold">Plush</span>
       </Link>
   )

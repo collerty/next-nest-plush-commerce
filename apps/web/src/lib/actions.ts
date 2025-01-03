@@ -3,7 +3,7 @@
 import {fetcher} from "@/lib/fetcher";
 import {apiUrl} from "@/lib/api-url";
 import {clearAuthTokens, getAuthTokens, setAuthTokens} from "@/lib/auth-tokens";
-import {Product} from "@/lib/types";
+import {Product, User} from "@/lib/types";
 
 
 export interface ApiResponse<T> {
@@ -43,8 +43,8 @@ export async function login(body: LoginBody): Promise<ApiResponse<Tokens>> {
   }
 }
 
-/* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
-export async function getProfile(): Promise<ApiResponse<any>> {
+
+export async function getProfile(): Promise<ApiResponse<User>> {
   try {
     const data = await fetcher(`${apiUrl}/auth/profile`, {
       method: 'GET',

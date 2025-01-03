@@ -13,6 +13,10 @@ export class User {
   @Column({ nullable: true, unique: true })
   socialId: string;
 
+  @ApiProperty({ description: 'User icon',  })
+  @Column({ nullable: false, default: "https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper.png" })
+  profileIcon: string;
+
   @ApiProperty({ description: 'Username of the user' })
   @Column({ nullable: false })
   username: string;
