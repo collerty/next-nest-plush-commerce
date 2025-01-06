@@ -16,21 +16,44 @@ import Image from "next/image";
 import {User} from "@/lib/types";
 import {Button} from "@/components/ui/button";
 import {UserAccount} from "@/components/header/user-account";
-import {ApiResponse} from "@/lib/actions";
+import {ApiResponse, getProfile} from "@/lib/actions";
 
-export function Header({user}: { user: ApiResponse<User> }) {
+export function Header() {
+  const [user, setUser] = React.useState<User | null>(null);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const response: ApiResponse<User> = await getProfile();
+        if (response.data) {
+          setUser(response.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user profile:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProfile();
+  }, []);
   return (
       <div className="w-full py-4 border-b flex gap-8 px-10 lg:px-20 xl:px-40">
         <Logo/>
         <NavigationMenuDemo/>
         <div className="w-full flex justify-end items-center">
-          {user.data ? <UserAccount user={user.data}/> :
-              <Link href={"/auth/sign-in"}>
+          {loading ? (
+              <p>Loading...</p>
+          ) : user ? (
+              <UserAccount user={user}/>
+          ) : (
+              <Link href="/auth/sign-in">
                 <Button>
                   Sign In
                 </Button>
               </Link>
-          }
+          )}
         </div>
       </div>
   )

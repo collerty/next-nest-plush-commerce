@@ -6,10 +6,9 @@ export default async function AuthLayout({
                                    }: {
   children: React.ReactNode
 }) {
-  const user = await getProfile();
   return (
       <>
-        <Header user={user}/>
+        <Header/>
         <main className="w-full h-full px-10 lg:px-20 xl:px-40 py-8">
           {children}
         </main>
