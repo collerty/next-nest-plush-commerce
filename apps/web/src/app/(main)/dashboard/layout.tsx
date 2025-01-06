@@ -16,7 +16,6 @@ const tabs = [
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
-  console.log("DashboardLayout rendered, pathname:", pathname);
   return (
       <div className="w-full max-w-7xl mx-auto min-h-screen flex flex-col">
         <nav className="bg-background border-b">

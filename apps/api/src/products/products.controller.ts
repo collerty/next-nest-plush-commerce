@@ -15,6 +15,7 @@ export class ProductsController {
   @ApiResponse({ status: 201, description: 'Product created successfully.' })
   @ApiResponse({ status: 400, description: 'Invalid input data.' })
   create(@Body() createProductDto: CreateProductDto) {
+    console.log("adding product", createProductDto)
     return this.productService.create(createProductDto);
   }
 

@@ -7,7 +7,14 @@ export interface Product {
   images: string[];
   description: string;
 }
-
+export interface AddProductDTO {
+  name: string;
+  categoryId: number;
+  price: number;
+  rating?:number;
+  images: string[];
+  description:string;
+}
 export interface Category {
   id: string;
   name: string;

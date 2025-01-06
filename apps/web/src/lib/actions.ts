@@ -3,7 +3,8 @@
 import {fetcher} from "@/lib/fetcher";
 import {apiUrl} from "@/lib/api-url";
 import {clearAuthTokens, getAuthTokens, setAuthTokens} from "@/lib/auth-tokens";
-import {Product, User} from "@/lib/types";
+import {AddProductDTO, Product, User} from "@/lib/types";
+import {redirect} from "next/navigation";
 
 
 export interface ApiResponse<T> {
@@ -59,6 +60,8 @@ export async function getProfile(): Promise<ApiResponse<User>> {
 }
 
 export async function logout(): Promise<void> {
+  let redirectPath: string | null = null;
+
   try {
     const {accessToken} = await getAuthTokens();
     const headers = {
@@ -70,14 +73,15 @@ export async function logout(): Promise<void> {
       credentials: 'include',
       ...headers
     });
-
+    console.log("clear auth tokens")
     await clearAuthTokens();
-
+    console.log("redirect")
+    // window.location.href = '/';
   } catch (e) {
     console.log(e);
+  } finally {
+    redirect("/");
   }
-
-  // redirect("/");
 }
 
 export async function getProductById(id: string): Promise<ApiResponse<Product>> {
@@ -89,6 +93,7 @@ export async function getProductById(id: string): Promise<ApiResponse<Product>> 
     return {success: true, data: data};
     /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
   } catch (error: any) {
+    console.log(error)
     return {success: false, error: error};
   }
 }
@@ -97,6 +102,39 @@ export async function getAllProducts(): Promise<ApiResponse<Product[]>> {
   try {
     const data = await fetcher(`${apiUrl}/products`, {
       method: 'GET'
+    });
+
+    return {success: true, data: data};
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+  } catch (error: any) {
+    return {success: false, error: error};
+  }
+}
+
+export async function addProduct(body: Partial<AddProductDTO>): Promise<ApiResponse<Product>> {
+  try {
+    console.log("adding product", {body});
+    const data = await fetcher(`${apiUrl}/products`, {
+      method: 'POST',
+      body: JSON.stringify(body)
+    });
+
+    return {success: true, data: data};
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+  } catch (error: any) {
+    return {success: false, error: error};
+  }
+}
+
+
+export async function getAllCategories(): Promise<ApiResponse<Product[]>> {
+  try {
+    // const data = await fetcher(`${apiUrl}/categories`, {
+    //   method: 'GET',
+    // });
+    const data = await fetch(`${apiUrl}/categories`, {
+      method: 'GET',
+      'Content-Type': 'application/json',
     });
 
     return {success: true, data: data};

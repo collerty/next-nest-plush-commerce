@@ -3,8 +3,6 @@ import {RecentSales} from "@/components/dashboard/recent-sales";
 import {DashboardCards} from "@/components/dashboard/dashboard-cards";
 
 export default function DashboardPage() {
-
-  console.log("DashboardPage mounted");
   return (
       <div className="space-y-4">
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
