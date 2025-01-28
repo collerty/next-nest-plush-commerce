@@ -1,19 +1,9 @@
-// "use client"
+"use client"
 import {
-  Cloud,
   CreditCard,
   Github,
-  Keyboard, LayoutDashboard,
-  LifeBuoy,
-  LogOut,
-  Mail,
-  MessageSquare,
-  Plus,
-  PlusCircle,
-  Settings,
+  LayoutDashboard, LogOut,
   User,
-  UserPlus,
-  Users,
 } from "lucide-react"
 
 import {Button} from "@/components/ui/button"
@@ -33,12 +23,16 @@ import {
 } from "@/components/ui/dropdown-menu"
 import Image from "next/image";
 import Link from "next/link";
-import {LogoutButton} from "@/components/auth/logout-button";
-import {logout} from "@/lib/actions";
 import {User as UserType} from "@/lib/types";
+import {useRouter} from "next/navigation";
+import {useUser} from "@/components/header/user-context";
 
 export function UserAccount({user}: { user: UserType }) {
-  // console.log(user);
+  // async function handleLogout() {
+  //   await logout();
+  //   location.reload();
+  // }
+  const {logout} = useUser();
   return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -88,7 +82,7 @@ export function UserAccount({user}: { user: UserType }) {
             </a>
           </DropdownMenuItem>
           <DropdownMenuSeparator/>
-          <DropdownMenuItem onClick={() => logout()} asChild>
+          <DropdownMenuItem onClick={logout} asChild>
             <div>
               <LogOut className='mr-2 h-4 w-4' aria-hidden='true'/>
               Logout

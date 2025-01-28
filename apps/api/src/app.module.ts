@@ -7,8 +7,10 @@ import typeorm from './config/typeorm';
 import {ProductsModule} from "./products/products.module";
 import {UsersModule} from "./users/users.module";
 import {AuthModule} from "./auth/auth.module";
-import { CategoriesModule } from './categories/categories.module';
-import { OrdersModule } from './orders/orders.module';
+import {CategoriesModule} from './categories/categories.module';
+import {OrdersModule} from './orders/orders.module';
+import {CloudinaryConfigService} from "./config/cloudinary.config";
+import {UploadModule} from "./upload/upload.module";
 
 @Module({
   imports: [
@@ -33,9 +35,16 @@ import { OrdersModule } from './orders/orders.module';
     AuthModule,
     CategoriesModule,
     OrdersModule,
+    UploadModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, CloudinaryConfigService],
 })
 export class AppModule {
+  constructor(
+      private readonly cloudinaryConfigService: CloudinaryConfigService,
+  ) {
+    // Call the configure method to initialize Cloudinary
+    this.cloudinaryConfigService.configure();
+  }
 }

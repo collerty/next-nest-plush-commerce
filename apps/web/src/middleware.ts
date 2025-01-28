@@ -1,19 +1,17 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import {NextResponse} from 'next/server'
+import type {NextRequest} from 'next/server'
 import {getAuthTokens} from "@/lib/auth-tokens";
 
 
 export async function middleware(request: NextRequest) {
 
-  const {accessToken, refreshToken} = await getAuthTokens();
-  console.log("middleware tokens", {accessToken, refreshToken});
-
-  if (!refreshToken || !accessToken) {
-    return NextResponse.redirect(new URL('/auth', request.url));
-  }
-
   try {
+    const {accessToken, refreshToken} = await getAuthTokens();
+    console.log("middleware tokens", {accessToken, refreshToken});
 
+    if (!refreshToken || !accessToken) {
+      return NextResponse.redirect(new URL('/auth', request.url));
+    }
 
 
   } catch (err) {

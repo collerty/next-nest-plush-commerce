@@ -13,38 +13,19 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import Image from "next/image";
-import {User} from "@/lib/types";
 import {Button} from "@/components/ui/button";
 import {UserAccount} from "@/components/header/user-account";
-import {ApiResponse, getProfile} from "@/lib/actions";
+import {useUser} from "@/components/header/user-context";
 
 export function Header() {
-  const [user, setUser] = React.useState<User | null>(null);
-  const [loading, setLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    async function fetchProfile() {
-      try {
-        const response: ApiResponse<User> = await getProfile();
-        if (response.data) {
-          setUser(response.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user profile:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchProfile();
-  }, []);
+  const {user, loading} = useUser();
   return (
       <div className="w-full py-4 border-b flex gap-8 px-10 lg:px-20 xl:px-40">
         <Logo/>
         <NavigationMenuDemo/>
         <div className="w-full flex justify-end items-center">
           {loading ? (
-              <p>Loading...</p>
+              <AccountSkeleton/>
           ) : user ? (
               <UserAccount user={user}/>
           ) : (
@@ -58,6 +39,16 @@ export function Header() {
       </div>
   )
 }
+
+
+export function AccountSkeleton() {
+  return (
+      <div className="w-20 rounded-xl h-10 bg-gray-200 animate-pulse">
+      </div>
+  )
+}
+
+
 
 export function Logo() {
   return (

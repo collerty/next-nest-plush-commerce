@@ -20,7 +20,7 @@ import {X} from "lucide-react";
 import {ImageUpload} from "@/components/dashboard/image-upload";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
-import {addProduct, getAllCategories} from "@/lib/actions";
+import {addProduct, getAllCategories, uploadImages} from "@/lib/actions";
 import {
   Select,
   SelectItem,
@@ -65,8 +65,24 @@ const formSchema = z.object({
 
 const categories = [
   {
-    id: 3,
-    name: "Toys"
+    "id": 11,
+    "name": "Wildlife Animals"
+  },
+  {
+    "id": 12,
+    "name": "Fantasy Creatures"
+  },
+  {
+    "id": 13,
+    "name": "Aquatic Animals"
+  },
+  {
+    "id": 14,
+    "name": "Birds"
+  },
+  {
+    "id": 15,
+    "name": "Pets"
   }
 ]
 
@@ -87,17 +103,23 @@ export function AddProductForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
+      let {images} = values;
+      const formData = new FormData();
+      if (images) {
+        for (const image of images) {
+          formData.append('images', image);
+        }
+      }
+      const uploadedImages = await uploadImages(formData);
+      const addProductDTO = {...values, images: uploadedImages.data};
 
-      const res = await addProduct(values);
+      const res = await addProduct(addProductDTO);
 
       if (!res.success) {
         throw new Error(res.error);
       }
-      // await new Promise((resolve) => setTimeout(() => {
-      //   console.log("Simulated API call delay");
-      //   resolve(null);
-      // }, 4000));
+
       toast.success('Product is created.');
       // router.push("/dashboard/products/");
     } catch (error: any) {
@@ -162,12 +184,12 @@ export function AddProductForm() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectItem value="3">Toys</SelectItem>
-                            {/*{categories.map((category: { id: string; name: string }) => (*/}
-                            {/*    <SelectItem key={category.id} value={category.id}>*/}
-                            {/*      {category.name}*/}
-                            {/*    </SelectItem>*/}
-                            {/*))}*/}
+                            {/*<SelectItem value="3">Toys</SelectItem>*/}
+                            {categories.map((category) => (
+                                <SelectItem key={category.id} value={`${category.id}`}>
+                                  {category.name}
+                                </SelectItem>
+                            ))}
                           </SelectGroup>
                         </SelectContent>
                       </Select>

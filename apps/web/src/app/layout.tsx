@@ -4,6 +4,7 @@ import {clsx} from "clsx";
 import {GeistSans} from 'geist/font/sans';
 import {Toaster} from "sonner";
 import {Header} from "@/components/header/header";
+import {AuthProvider} from "@/components/auth/auth-context";
 
 
 export const metadata: Metadata = {
