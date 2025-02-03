@@ -131,6 +131,23 @@ export async function addProduct(body: Partial<AddProductDTO>): Promise<ApiRespo
   }
 }
 
+export async function updateProduct(body: Partial<AddProductDTO>, productId): Promise<ApiResponse<Product>> {
+  try {
+    console.log("editing product", {body});
+    const data = await fetcher(`${apiUrl}/products/${productId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+      'Content-Type': 'application/json',
+    });
+
+    return {success: true, data: data};
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+  } catch (error: any) {
+    return {success: false, error: error};
+  }
+}
+
+
 export async function deleteProduct(id) {
   try {
     const data = await fetcher(`${apiUrl}/products/${id}`, {
@@ -143,8 +160,12 @@ export async function deleteProduct(id) {
     return {success: false, error: error};
   }
 }
+
 export async function uploadImages(formData): Promise<ApiResponse<string[]>> {
   try {
+    if (formData.entries().next().done) {
+      return {success: true, data: []};
+    }
     console.log(formData);
     const data = await fetcher(`${apiUrl}/upload/images`, {
       method: 'POST',

@@ -20,7 +20,7 @@ import {X} from "lucide-react";
 import {ImageUpload} from "@/components/dashboard/image-upload";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
-import {addProduct, getAllCategories, uploadImages} from "@/lib/actions";
+import {addProduct, getAllCategories, updateProduct, uploadImages} from "@/lib/actions";
 import {
   Select,
   SelectItem,
@@ -30,6 +30,7 @@ import {
   SelectGroup,
   SelectValue
 } from "@/components/ui/select";
+import {Product} from "@/lib/types";
 
 // Images
 const MAX_IMAGE_SIZE = 5242880; // 5 MB
@@ -46,20 +47,28 @@ const formSchema = z.object({
   price: z.coerce.number().gte(1).lte(9999999),
   categoryId: z.coerce.number().min(1),
   images: z
-      .custom<FileList>((val) => val instanceof FileList, "Required")
-      .refine((files) => files.length > 0, `Required`)
-      .refine((files) => files.length <= 5, `Maximum of 5 images are allowed.`)
+      .array(
+          z.union([
+            z.string().url(), // ✅ Supports existing image URLs
+            z.instanceof(File) // ✅ Supports new image uploads
+          ])
+      )
+      .min(1, "At least one image is required")
+      .max(5, "Maximum of 5 images are allowed")
       .refine(
-          (files) =>
-              Array.from(files).every((file) => file.size <= MAX_IMAGE_SIZE),
+          (images) =>
+              images.every((image) =>
+                  typeof image === "string" || image.size <= MAX_IMAGE_SIZE
+              ),
           `Each file size should be less than 5 MB.`
       )
       .refine(
-          (files) =>
-              Array.from(files).every((file) =>
-                  ALLOWED_IMAGE_TYPES.includes(file.type)
+          (images) =>
+              images.every(
+                  (image) =>
+                      typeof image === "string" || ALLOWED_IMAGE_TYPES.includes(image.type)
               ),
-          "Only these types are allowed .jpg, .jpeg, .png and .webp"
+          "Only these types are allowed: .jpg, .jpeg, .png, .webp"
       ),
 });
 
@@ -86,15 +95,15 @@ const categories = [
   }
 ]
 
-export function AddProductForm() {
+export function EditProductForm({product} : {product: Product}) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      price: "",
-      categoryId: "",
-      images: []
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      categoryId: product.category.id,
+      images: product.images,
     },
   })
 
@@ -104,23 +113,28 @@ export function AddProductForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
+      // console.log(values);
       let {images} = values;
+      const existingImages = images.filter((img) => typeof img === "string");
+      const newImages = images.filter((img) => img instanceof File);
+
       const formData = new FormData();
-      if (images) {
+      if (newImages) {
         for (const image of images) {
           formData.append('images', image);
         }
       }
       const uploadedImages = await uploadImages(formData);
-      const addProductDTO = {...values, images: uploadedImages.data};
+      const addProductDTO = {...values, images: [...uploadedImages.data, ...existingImages]};
 
-      const res = await addProduct(addProductDTO);
+      console.log(addProductDTO);
+      const res = await updateProduct(addProductDTO, product.id);
 
       if (!res.success) {
         throw new Error(res.error);
       }
 
-      toast.success('Product is created.');
+      toast.success('Product is updated.');
       // router.push("/dashboard/products/");
     } catch (error: any) {
       console.log(error);
@@ -174,19 +188,21 @@ export function AddProductForm() {
           <FormField
               control={form.control}
               name="categoryId"
-              render={({field}) => (
+              render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                          onValueChange={(value) => field.onChange(Number(value))} // Ensure it's a number
+                          value={field.value?.toString()} // Ensure string for the Select component
+                      >
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a Category"/>
+                          <SelectValue placeholder="Select a Category" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            {/*<SelectItem value="3">Toys</SelectItem>*/}
                             {categories.map((category) => (
-                                <SelectItem key={category.id} value={`${category.id}`}>
+                                <SelectItem key={category.id} value={category.id.toString()}>
                                   {category.name}
                                 </SelectItem>
                             ))}
@@ -194,9 +210,11 @@ export function AddProductForm() {
                         </SelectContent>
                       </Select>
                     </FormControl>
-                    <FormMessage/>
+                    <FormMessage />
                   </FormItem>
-              )}/>
+              )}
+          />
+
           <FormField
               control={form.control}
               name="price"
