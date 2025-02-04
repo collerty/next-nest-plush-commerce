@@ -5,6 +5,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {Product} from "@/lib/types";
+import {AddToCartButton} from "@/components/cart/cart";
 
 
 export function ProductCard({ product }: { product: Product }) {
@@ -40,7 +41,8 @@ export function ProductCard({ product }: { product: Product }) {
           </CardContent>
         </Link>
         <CardFooter className="p-4 pt-0">
-          <Button variant="outline" className="w-full">Add to Cart</Button>
+          {/*<Button variant="outline" className="w-full">Add to Cart</Button>*/}
+          <AddToCartButton product={product} variant={"outline"}/>
         </CardFooter>
       </Card>
   )

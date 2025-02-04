@@ -4,10 +4,11 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
 import {StarRating} from "@/components/icons/star";
 import {Product as ProductProps} from "@/lib/types";
 import {ProductImages} from "@/components/products/product-images";
+import {AddToCartButton} from "@/components/cart/cart";
 // import {cn} from "@/lib/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function Product({id, name, description, price, rating, images}: ProductProps) {
+export function Product({id, name, description, price, rating, images, category}: ProductProps) {
   return (
       <div className="w-full min-h-screen flex justify-center ">
         <Card className="w-full max-w-7xl shadow-none border-none">
@@ -55,11 +56,12 @@ export function Product({id, name, description, price, rating, images}: ProductP
                   </TabsContent>
                 </Tabs>
                 <div className="flex gap-4 mt-4">
-                  <Button size="lg" className="flex-1">
-                    Add to Cart
-                  </Button>
+                  {/*<Button size="lg" className="flex-1">*/}
+                  {/*  Add to Cart*/}
+                  {/*</Button>*/}
+                  <AddToCartButton product={{id, name, description, price, rating, images, category}}/>
                   <Button size="lg" variant="outline" className="flex-1">
-                    Add to Wishlist
+                    Buy now
                   </Button>
                 </div>
               </div>

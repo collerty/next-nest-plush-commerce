@@ -16,6 +16,7 @@ import Image from "next/image";
 import {Button} from "@/components/ui/button";
 import {UserAccount} from "@/components/header/user-account";
 import {useUser} from "@/components/header/user-context";
+import {CartButton} from "@/components/cart/cart";
 
 export function Header() {
   const {user, loading} = useUser();
@@ -23,18 +24,21 @@ export function Header() {
       <div className="w-full py-4 border-b flex gap-8 px-10 lg:px-20 xl:px-40">
         <Logo/>
         <NavigationMenuDemo/>
-        <div className="w-full flex justify-end items-center">
-          {loading ? (
-              <AccountSkeleton/>
-          ) : user ? (
-              <UserAccount user={user}/>
-          ) : (
-              <Link href="/auth/sign-in">
-                <Button>
-                  Sign In
-                </Button>
-              </Link>
-          )}
+        <div className="w-full flex justify-end items-center gap-4">
+          <CartButton/>
+          <div className="rounded-xl h-10 flex items-center justify-end transition-all duration-500 ease-in-out" style={{ width: user ? "2rem" : "5rem" }}>
+            {loading ? (
+                <AccountSkeleton/>
+            ) : user ? (
+                <UserAccount user={user}/>
+            ) : (
+                <Link href="/auth/sign-in">
+                  <Button>
+                    Sign In
+                  </Button>
+                </Link>
+            )}
+          </div>
         </div>
       </div>
   )
@@ -49,7 +53,6 @@ export function AccountSkeleton() {
 }
 
 
-
 export function Logo() {
   return (
       <Link href={"/"} className="flex gap-4 items-center">
@@ -60,6 +63,7 @@ export function Logo() {
       </Link>
   )
 }
+
 
 
 // const components: { title: string; href: string; description: string }[] = [

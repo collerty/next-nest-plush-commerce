@@ -23,6 +23,7 @@ const categories_module_1 = require("./categories/categories.module");
 const orders_module_1 = require("./orders/orders.module");
 const cloudinary_config_1 = require("./config/cloudinary.config");
 const upload_module_1 = require("./upload/upload.module");
+const stripe_module_1 = require("./stripe/stripe.module");
 let AppModule = class AppModule {
     constructor(cloudinaryConfigService) {
         this.cloudinaryConfigService = cloudinaryConfigService;
@@ -54,7 +55,8 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             categories_module_1.CategoriesModule,
             orders_module_1.OrdersModule,
-            upload_module_1.UploadModule
+            upload_module_1.UploadModule,
+            stripe_module_1.StripeModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, cloudinary_config_1.CloudinaryConfigService],

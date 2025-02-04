@@ -88,7 +88,10 @@ export async function logout(): Promise<void> {
   }
 }
 
+const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+
 export async function getProductById(id: string): Promise<ApiResponse<Product>> {
+  await sleep(4000);
   try {
     const data = await fetcher(`${apiUrl}/products/${id}`, {
       method: 'GET'

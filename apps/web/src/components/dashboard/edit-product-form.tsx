@@ -255,3 +255,31 @@ export function EditProductForm({product} : {product: Product}) {
       </Form>
   )
 }
+
+export function EditFormSkeleton() {
+  return (
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <div className="h-4 w-20 bg-gray-200 rounded animate-pulse" />
+          <div className="h-10 bg-gray-200 rounded animate-pulse" />
+        </div>
+        <div className="space-y-2">
+          <div className="h-4 w-24 bg-gray-200 rounded animate-pulse" />
+          <div className="h-24 bg-gray-200 rounded animate-pulse" />
+        </div>
+        <div className="space-y-2">
+          <div className="h-4 w-20 bg-gray-200 rounded animate-pulse" />
+          <div className="h-10 bg-gray-200 rounded animate-pulse" />
+        </div>
+        <div className="space-y-2">
+          <div className="h-4 w-16 bg-gray-200 rounded animate-pulse" />
+          <div className="h-10 bg-gray-200 rounded animate-pulse" />
+        </div>
+        <div className="space-y-2">
+          <div className="h-4 w-16 bg-gray-200 rounded animate-pulse" />
+          <div className="h-24 bg-gray-200 rounded animate-pulse" />
+        </div>
+        <div className="h-10 w-24 bg-gray-200 rounded animate-pulse" />
+      </div>
+  )
+}

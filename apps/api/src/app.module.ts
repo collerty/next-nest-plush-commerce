@@ -11,6 +11,7 @@ import {CategoriesModule} from './categories/categories.module';
 import {OrdersModule} from './orders/orders.module';
 import {CloudinaryConfigService} from "./config/cloudinary.config";
 import {UploadModule} from "./upload/upload.module";
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -35,7 +36,8 @@ import {UploadModule} from "./upload/upload.module";
     AuthModule,
     CategoriesModule,
     OrdersModule,
-    UploadModule
+    UploadModule,
+    StripeModule
   ],
   controllers: [AppController],
   providers: [AppService, CloudinaryConfigService],

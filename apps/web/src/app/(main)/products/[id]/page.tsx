@@ -7,7 +7,7 @@ export default async function Page({params,}: { params: Promise<{ id: string }> 
   if (!product.data) {
     return (
         <div>
-          Product no available...
+          Product not available...
         </div>
     )
   }

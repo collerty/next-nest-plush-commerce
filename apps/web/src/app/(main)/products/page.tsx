@@ -6,7 +6,7 @@ export default async function Page() {
   const products: ApiResponse<Product[]> = await getAllProducts();
   return (
       <div className="">
-        {!products.error && <ProductCards products={products.data!}/>}
+        {!products.error && products.data && <ProductCards products={products.data}/>}
       </div>
   )
 }

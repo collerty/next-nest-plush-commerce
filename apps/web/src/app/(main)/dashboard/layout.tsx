@@ -2,7 +2,6 @@
 
 import { AnimatePresence } from "motion/react"
 import * as motion from "motion/react-client"
-import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { ReactNode } from "react"
 import { LayoutDashboard, ShoppingCart, Package } from 'lucide-react'
