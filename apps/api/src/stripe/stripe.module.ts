@@ -2,6 +2,8 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { StripeController } from './stripe.controller';
 import { StripeService } from './stripe.service';
+import {ProductsService} from "../products/products.service";
+import {ProductsModule} from "../products/products.module";
 
 @Module({})
 export class StripeModule {
@@ -10,7 +12,7 @@ export class StripeModule {
     return {
       module: StripeModule,
       controllers: [StripeController],
-      imports: [ConfigModule.forRoot()],
+      imports: [ConfigModule.forRoot(), ProductsModule],
       providers: [
         StripeService,
         {

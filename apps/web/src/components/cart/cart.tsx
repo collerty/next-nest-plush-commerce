@@ -12,6 +12,7 @@ import * as React from "react";
 import Image from "next/image";
 import {toast} from "sonner";
 import {VariantProps} from "class-variance-authority";
+import CheckoutButton from "@/components/cart/checkout-button";
 
 export type CartItem = Product & {
   quantity: number;
@@ -20,6 +21,7 @@ export type CartItem = Product & {
 type CartStore = {
   products: CartItem[];
   addProduct: (product: Product) => void;
+  clearCart: () => void;
   // (Optional) You might also add removeProduct or updateQuantity functions.
 };
 
@@ -46,7 +48,8 @@ export const useCartStore = create<CartStore>()(
                     products: [...state.products, {...product, quantity: 1}]
                   };
                 }
-              })
+              }),
+          clearCart: () => set(state => ({products: []}))
         }),
         {
           name: 'cart', // unique key in storage
@@ -97,15 +100,19 @@ export default function Cart({setIsCartOpen}: CartProps) {
             <span>Total:</span>
             <span>${total.toFixed(2)}</span>
           </div>
-          <Button
-              className="w-full"
-              onClick={() => {
-                console.log("Proceeding to buy...")
-                setIsCartOpen(false)
-              }}
-          >
-            Proceed to Buy
-          </Button>
+          <CheckoutButton
+              items={cartItems.map(({id, quantity}) => ({productId: id, quantity}))}
+              customerEmail={"test@gmail.com"}
+          />
+          {/*<Button*/}
+          {/*    className="w-full"*/}
+          {/*    onClick={() => {*/}
+          {/*      console.log("Proceeding to buy...")*/}
+          {/*      setIsCartOpen(false)*/}
+          {/*    }}*/}
+          {/*>*/}
+          {/*  Proceed to Buy*/}
+          {/*</Button>*/}
         </div>
       </div>
   )
@@ -120,7 +127,8 @@ export function CartButton() {
         <SheetTrigger asChild>
           <Button variant="outline" size="icon" className="relative">
             <span
-                className="transition-all duration-300 ease-in-out bg-black rounded-xl text-white absolute -top-2 -right-2 text-[0.75rem] w-4 h-4 flex justify-center items-center p-2.5" style={{opacity: products.length === 0 ? 0 : 1}}>{products.length}</span>
+                className="transition-all duration-300 ease-in-out bg-black rounded-xl text-white absolute -top-2 -right-2 text-[0.75rem] w-4 h-4 flex justify-center items-center p-2.5"
+                style={{opacity: products.length === 0 ? 0 : 1}}>{products.length}</span>
             <ShoppingCart className="h-4 w-4"/>
             <span className="sr-only">Open cart</span>
           </Button>

@@ -50,6 +50,7 @@ exports.AppModule = AppModule = __decorate([
                     return typeOrmConfig;
                 },
             }),
+            stripe_module_1.StripeModule.forRootAsync(),
             products_module_1.ProductsModule,
             users_module_1.UsersModule,
             auth_module_1.AuthModule,

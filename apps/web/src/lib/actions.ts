@@ -3,7 +3,7 @@
 import {fetcher} from "@/lib/fetcher";
 import {apiUrl} from "@/lib/api-url";
 import {clearAuthTokens, getAuthTokens, setAuthTokens} from "@/lib/auth-tokens";
-import {AddProductDTO, Product, User} from "@/lib/types";
+import {AddProductDTO, CheckoutSession, Product, User} from "@/lib/types";
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
 
@@ -191,6 +191,28 @@ export async function getAllCategories(): Promise<ApiResponse<Product[]>> {
     const data = await fetch(`${apiUrl}/categories`, {
       method: 'GET',
     });
+
+    return {success: true, data: data};
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+  } catch (error: any) {
+    return {success: false, error: error};
+  }
+}
+
+
+
+export async function createCheckoutSession(items: {
+  productId: number;
+  quantity: number
+}[], customerEmail: string): Promise<ApiResponse<CheckoutSession>> {
+  try {
+    const response = await fetch(`${apiUrl}/stripe/checkout`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({items, customerEmail}),
+    });
+
+    const data = await response.json();
 
     return {success: true, data: data};
     /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */

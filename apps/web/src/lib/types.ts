@@ -7,14 +7,16 @@ export interface Product {
   images: string[];
   description: string;
 }
+
 export interface AddProductDTO {
   name: string;
   categoryId: number;
   price: number;
-  rating?:number;
+  rating?: number;
   images: string[];
-  description:string;
+  description: string;
 }
+
 export interface Category {
   id: number;
   name: string;
@@ -23,10 +25,12 @@ export interface Category {
 export interface User {
   id: string;
   socialId: string;
-  profileIcon:string;
+  profileIcon: string;
   username: string;
   email: string;
   created_at: string;
   modified_at: string;
   refreshToken: string;
 }
+
+export type CheckoutSession = { sessionId: string }

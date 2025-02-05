@@ -11,7 +11,7 @@ import {CategoriesModule} from './categories/categories.module';
 import {OrdersModule} from './orders/orders.module';
 import {CloudinaryConfigService} from "./config/cloudinary.config";
 import {UploadModule} from "./upload/upload.module";
-import { StripeModule } from './stripe/stripe.module';
+import {StripeModule} from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -31,6 +31,7 @@ import { StripeModule } from './stripe/stripe.module';
         return typeOrmConfig;
       },
     }),
+    StripeModule.forRootAsync(),
     ProductsModule,
     UsersModule,
     AuthModule,

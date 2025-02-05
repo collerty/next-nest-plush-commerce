@@ -90,7 +90,7 @@ export class AuthController {
     await this.authService.socialLogin(req.user, 'google', res);
 
     const redirectUrl = this.configService.get<string>(
-        'REDIRECT_URL_PRODUCTION',
+        'NEXT_URL_PRODUCTION',
         'http://localhost:3000', // fallback to localhost if not set
     );
 
@@ -114,7 +114,7 @@ export class AuthController {
     await this.authService.socialLogin(req.user, 'github', res);
 
     const redirectUrl = this.configService.get<string>(
-        'REDIRECT_URL_PRODUCTION',
+        'NEXT_URL_PRODUCTION',
         'http://localhost:3000', // fallback to localhost if not set
     );
 
