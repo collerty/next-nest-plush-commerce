@@ -5,14 +5,16 @@ import {Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from "@/comp
 
 import {create} from 'zustand'
 import {persist, createJSONStorage} from 'zustand/middleware'
-import {Product} from "@/lib/types";
+import {Product, User} from "@/lib/types";
 import {useState} from "react";
-import {ShoppingCart} from "lucide-react";
+import {ShoppingCart, Trash2} from "lucide-react";
 import * as React from "react";
 import Image from "next/image";
 import {toast} from "sonner";
 import {VariantProps} from "class-variance-authority";
 import CheckoutButton from "@/components/cart/checkout-button";
+import Link from "next/link";
+import {cn} from "@/lib/utils";
 
 export type CartItem = Product & {
   quantity: number;
@@ -21,6 +23,7 @@ export type CartItem = Product & {
 type CartStore = {
   products: CartItem[];
   addProduct: (product: Product) => void;
+  removeProduct: (productId: number) => void;
   clearCart: () => void;
   // (Optional) You might also add removeProduct or updateQuantity functions.
 };
@@ -49,6 +52,7 @@ export const useCartStore = create<CartStore>()(
                   };
                 }
               }),
+          removeProduct: (productId) => set(state => ({products: state.products.filter((product) => product.id !== productId)})),
           clearCart: () => set(state => ({products: []}))
         }),
         {
@@ -59,12 +63,32 @@ export const useCartStore = create<CartStore>()(
 );
 
 interface CartProps {
-  setIsCartOpen: (isOpen: boolean) => void
+  setIsCartOpen: (isOpen: boolean) => void;
+  user: User;
 }
 
-export default function Cart({setIsCartOpen}: CartProps) {
-  const {products: cartItems} = useCartStore();
+export default function Cart({setIsCartOpen, user}: CartProps) {
+  const {products: cartItems, removeProduct: removeItem} = useCartStore();
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+
+  function handleEmptyCartClick(e) {
+    if (cartItems.length === 0) {
+    toast.error("Cart is empty");
+    //   toast({
+    //     className: cn(
+    //         'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
+    //     ),
+    //     variant: 'default',
+    //     title: 'Uh oh! Something went wrong.',
+    //     description: 'There was a problem with your request.',
+    //     action: <ToastAction altText="Try again">Try again</ToastAction>
+    //   })
+    // // console.log("cart is empty");
+    e.preventDefault();
+    } else {
+      toast.info("Sign in to start checkout");
+    }
+  }
 
   return (
       <div className="flex flex-col h-full">
@@ -83,7 +107,7 @@ export default function Cart({setIsCartOpen}: CartProps) {
                       className="rounded-md"
                   />
                   <div className="flex-grow">
-                    <div className="flex justify-between">
+                    <div className="flex justify-between items-center">
                       <span className="font-medium">{item.name}</span>
                       <span>${(item.price * item.quantity).toFixed(2)}</span>
                     </div>
@@ -91,6 +115,15 @@ export default function Cart({setIsCartOpen}: CartProps) {
                       Quantity: {item.quantity} x ${item.price.toFixed(2)}
                     </div>
                   </div>
+                  <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => removeItem(item.id)}
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <Trash2 className="h-4 w-4"/>
+                    <span className="sr-only">Remove {item.name} from cart</span>
+                  </Button>
                 </li>
             ))}
           </ul>
@@ -100,10 +133,24 @@ export default function Cart({setIsCartOpen}: CartProps) {
             <span>Total:</span>
             <span>${total.toFixed(2)}</span>
           </div>
-          <CheckoutButton
-              items={cartItems.map(({id, quantity}) => ({productId: id, quantity}))}
-              customerEmail={"test@gmail.com"}
-          />
+          {!user ?
+              <Link
+                  href={"/auth/sign-in"}
+                  onClick={handleEmptyCartClick}
+                  // className={cartItems.length === 0 ? 'pointer-events-none' : ''}
+                  aria-disabled={cartItems.length === 0}
+                  tabIndex={cartItems.length === 0 ? -1 : undefined}
+              >
+                <Button className={"w-full"}
+                    // disabled={cartItems.length === 0}
+                >Checkout</Button>
+              </Link>
+              :
+              <CheckoutButton
+                  items={cartItems.map(({id, quantity}) => ({productId: id, quantity}))}
+                  customerEmail={user.email}
+              />
+          }
           {/*<Button*/}
           {/*    className="w-full"*/}
           {/*    onClick={() => {*/}
@@ -116,10 +163,9 @@ export default function Cart({setIsCartOpen}: CartProps) {
         </div>
       </div>
   )
-
 }
 
-export function CartButton() {
+export function CartButton({user}: { user: User }) {
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const {products} = useCartStore();
   return (
@@ -134,7 +180,7 @@ export function CartButton() {
           </Button>
         </SheetTrigger>
         <SheetContent>
-          <Cart setIsCartOpen={setIsCartOpen}/>
+          <Cart setIsCartOpen={setIsCartOpen} user={user}/>
         </SheetContent>
       </Sheet>
   )

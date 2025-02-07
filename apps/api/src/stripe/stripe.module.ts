@@ -4,6 +4,7 @@ import { StripeController } from './stripe.controller';
 import { StripeService } from './stripe.service';
 import {ProductsService} from "../products/products.service";
 import {ProductsModule} from "../products/products.module";
+import {OrdersModule} from "../orders/orders.module";
 
 @Module({})
 export class StripeModule {
@@ -12,7 +13,7 @@ export class StripeModule {
     return {
       module: StripeModule,
       controllers: [StripeController],
-      imports: [ConfigModule.forRoot(), ProductsModule],
+      imports: [ConfigModule.forRoot(), ProductsModule, OrdersModule],
       providers: [
         StripeService,
         {

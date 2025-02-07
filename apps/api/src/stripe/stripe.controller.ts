@@ -1,7 +1,8 @@
-import {Body, Controller, Get, Post} from '@nestjs/common';
+import {Body, Controller, Get, HttpCode, HttpStatus, Post, RawBodyRequest, Req, Headers} from '@nestjs/common';
 import {StripeService} from './stripe.service';
 import {CreateCheckoutSessionDto} from "./dto/createCheckoutSession.dto";
 import {Public} from "../auth/public.decorator";
+import Stripe from "stripe";
 
 @Controller('stripe')
 export class StripeController {
@@ -18,15 +19,24 @@ export class StripeController {
   //   return await this.stripeService.getCustomers();
   // }
 
-  // @Public()
-  // @Post('webhook')
-  // async handleStripeWebhook(
-  //     @Body() body: any,
-  //     @Headers('stripe-signature') sig: string
-  // ) {
-  //     return this.stripeService.handleWebhook(body, sig);
-  // }
+  @Public()
+  @Post('webhook')
+  @HttpCode(HttpStatus.OK)
+  async handleStripeWebhook(@Headers("stripe-signature") sig: string, @Req() req: Request) {
+    // const sig = req.headers.get('stripe-signature');
 
+    if (!sig) {
+      throw new Error('Stripe signature is missing');
+    }
+
+    const rawBody = (req as any).rawBody; // Ensure rawBody is accessible
+
+    if (!rawBody) {
+      throw new Error('Raw body is missing. Ensure body parser is set up correctly.');
+    }
+    console.log(sig);
+    return this.stripeService.handleStripeWebhook(rawBody, sig);
+  }
   @Public()
   @Post('checkout')
   async createCheckoutSession(@Body() createCheckoutSessionDTO: CreateCheckoutSessionDto) {

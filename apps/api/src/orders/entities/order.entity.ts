@@ -7,6 +7,7 @@ import {OrderItem} from "./order-item.entity";
 export enum OrderStatus {
   PENDING = 'pending',
   PROCESSING = 'processing',
+  PAID = 'paid',
   SHIPPED = 'shipped',
   DELIVERED = 'delivered',
   CANCELLED = 'cancelled',
@@ -29,4 +30,8 @@ export class Order {
     default: OrderStatus.PENDING
   })
   status: OrderStatus;
+
+  @Column()
+  sessionId: string;
+
 }

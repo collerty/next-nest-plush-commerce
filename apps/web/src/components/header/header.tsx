@@ -25,7 +25,7 @@ export function Header() {
         <Logo/>
         <NavigationMenuDemo/>
         <div className="w-full flex justify-end items-center gap-4">
-          <CartButton/>
+          <CartButton user={user}/>
           <div className="rounded-xl h-10 flex items-center justify-end transition-all duration-500 ease-in-out" style={{ width: user ? "2rem" : "5rem" }}>
             {loading ? (
                 <AccountSkeleton/>
