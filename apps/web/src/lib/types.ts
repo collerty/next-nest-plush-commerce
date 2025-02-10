@@ -34,3 +34,26 @@ export interface User {
 }
 
 export type CheckoutSession = { sessionId: string }
+
+export type OrderItem = {
+  id: number;
+  quantity: number;
+  pricePerUnit: string;
+  product: Product;
+};
+export enum OrderStatus {
+  PENDING = 'pending',
+  PROCESSING = 'processing',
+  PAID = 'paid',
+  SHIPPED = 'shipped',
+  DELIVERED = 'delivered',
+  CANCELLED = 'cancelled',
+}
+
+export type Order = {
+  id: number;
+  status: OrderStatus;
+  sessionId: string;
+  items: OrderItem[];
+  created_at: string
+};

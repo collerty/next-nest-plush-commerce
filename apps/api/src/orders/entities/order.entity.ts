@@ -3,6 +3,7 @@ import {Product} from "../../products/entities/product.entity";
 import {JoinTable} from "typeorm/browser";
 import {User} from "../../users/entities/user.entity";
 import {OrderItem} from "./order-item.entity";
+import {ApiProperty} from "@nestjs/swagger";
 
 export enum OrderStatus {
   PENDING = 'pending',
@@ -33,5 +34,9 @@ export class Order {
 
   @Column()
   sessionId: string;
+
+  @ApiProperty({ description: 'Timestamp when the user was created' })
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  created_at: Date;
 
 }

@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import {BadRequestException, ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
 import {CreateOrderDto} from './dto/create-order.dto';
 import {UpdateOrderDto} from './dto/update-order.dto';
 import {InjectRepository} from "@nestjs/typeorm";
@@ -95,7 +95,7 @@ export class OrdersService {
         })
     );
 
-    console.log(user, order, orderItems)
+    // console.log(user, order, orderItems)
     await this.orderItemsRepository.save(orderItems);
 
     const fullOrder = await this.ordersRepository.findOne({
@@ -121,16 +121,25 @@ export class OrdersService {
   }
 
 
-  async findOne(id: number) {
+  async findOne(id: number, userId: number) {
+    // Find the order by ID, including related items and products
     const order = await this.ordersRepository.findOne({
-          where: {id},
-          relations: ['items', 'items.product']
-        }
-    );
+      where: { id },
+      relations: ['items', 'items.product', 'user'],
+    });
+
+    // If the order does not exist
     if (!order) {
       throw new NotFoundException(`Order with ID ${id} not found`);
     }
-    return order;
+
+    // If the user does not match the order's userId
+    if (order.user.id !== userId) {
+      throw new ForbiddenException(`You are not authorized to view this order`);
+    }
+    const { user, ...orderWithoutUser } = order;
+
+    return orderWithoutUser;
   }
 
   async update(orderId: number, updateOrderDto: UpdateOrderDto, userId: number) {
@@ -181,8 +190,6 @@ export class OrdersService {
       orderItems: { productId: number; quantity: number, pricePerUnit: number }[],
       lineItems: { data: any[] }
   ): Promise<any> {
-    console.log("Creating order from Stripe session");
-    console.log({customerEmail, orderItems});
 
     if (!customerEmail) {
       throw new BadRequestException('Customer email not provided in Stripe session');
@@ -191,7 +198,6 @@ export class OrdersService {
     if (!lineItems || !lineItems.data) {
       throw new BadRequestException('Line items not found in Stripe session');
     }
-    console.log(orderItems);
     const createOrderDto: CreateOrderDto = {
       items: orderItems.map((orderItem) => {
 
@@ -204,9 +210,6 @@ export class OrdersService {
       sessionId: sessionId,
     };
 
-    console.log("Final Order DTO:", createOrderDto);
-
-    // Create order in database
     const order = await this.createOrderByEmail(createOrderDto, customerEmail, OrderStatus.PAID);
     return order;
   }

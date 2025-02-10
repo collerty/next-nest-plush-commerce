@@ -3,7 +3,7 @@
 import {fetcher} from "@/lib/fetcher";
 import {apiUrl} from "@/lib/api-url";
 import {clearAuthTokens, getAuthTokens, setAuthTokens} from "@/lib/auth-tokens";
-import {AddProductDTO, CheckoutSession, Product, User} from "@/lib/types";
+import {AddProductDTO, CheckoutSession, Order, Product, User} from "@/lib/types";
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
 
@@ -200,7 +200,6 @@ export async function getAllCategories(): Promise<ApiResponse<Product[]>> {
 }
 
 
-
 export async function createCheckoutSession(items: {
   productId: number;
   quantity: number
@@ -213,6 +212,35 @@ export async function createCheckoutSession(items: {
     });
 
     const data = await response.json();
+
+    return {success: true, data: data};
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+  } catch (error: any) {
+    return {success: false, error: error};
+  }
+}
+
+export async function getAllProfileOrders(): Promise<ApiResponse<Order[]>> {
+  try {
+    const data = await fetcher(`${apiUrl}/orders`, {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'},
+    });
+
+    return {success: true, data: data};
+    /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+  } catch (error: any) {
+    return {success: false, error: error};
+  }
+}
+
+
+export async function getOrder(id): Promise<ApiResponse<Order>> {
+  try {
+    const data = await fetcher(`${apiUrl}/orders/${id}`, {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'},
+    });
 
     return {success: true, data: data};
     /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */

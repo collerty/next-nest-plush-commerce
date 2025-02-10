@@ -31,8 +31,13 @@ export class OrdersController {
   @ApiOperation({summary: 'Get a single order by ID'})
   @ApiResponse({status: 200, description: 'Returns the specified order.'})
   @ApiResponse({status: 404, description: 'Order not found.'})
-  findOne(@Param('id') id: string) {
-    return this.ordersService.findOne(+id);
+  async findOne(
+      @Param('id') id: string,
+      @Req() req: any
+  ) {
+    console.log(req.user);
+    const userId = req.user.id;
+    return this.ordersService.findOne(+id, userId);
   }
 
   @Patch(':id')

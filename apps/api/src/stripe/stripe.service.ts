@@ -115,10 +115,8 @@ export class StripeService {
       throw new BadRequestException('No orderItems in session metadata');
     }
     const orderItems = JSON.parse(session.metadata.orderItems);
-    console.log(session);
     // Check if an order already exists with this session ID
     let order = await this.ordersService.findOrderBySessionId(id);
-    console.log(order);
     if (!order) {
       // If no order exists, create a new order
       console.log("create order");

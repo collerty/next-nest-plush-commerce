@@ -6,11 +6,10 @@ import {useEffect} from "react";
 
 export function Success() {
   const {clearCart} = useCartStore();
+  // renders twice only in development mode due to Strict Mode being active
   useEffect(() =>{
     clearCart();
-  }, [])
+  }, [clearCart])
   toast.success("Order has been proceeded")
-  return (
-      <></>
-  )
+  return null
 }
