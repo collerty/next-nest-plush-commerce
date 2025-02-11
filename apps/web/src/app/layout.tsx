@@ -4,6 +4,7 @@ import {clsx} from "clsx";
 import {GeistSans} from 'geist/font/sans';
 import {Toaster} from "sonner";
 import {Header} from "@/components/header/header";
+import {AuthProvider} from "@/components/auth/auth-context";
 
 
 export const metadata: Metadata = {
@@ -19,11 +20,10 @@ export default function RootLayout({
   return (
       <html lang="en" className="h-full">
       <body className={clsx(GeistSans.className, "flex flex-col w-full h-full")}>
-      <Header/>
-      <main className="w-full h-full px-10 lg:px-20 xl:px-40 py-8">
+      <div>
         {children}
-      </main>
-      <Toaster/>
+      </div>
+      <Toaster position={'bottom-left'}/>
       </body>
       </html>
   );

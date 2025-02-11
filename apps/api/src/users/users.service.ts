@@ -15,7 +15,6 @@ export class UsersService {
 
   async findOrCreateUser(profile: any, provider: string): Promise<User> {
     const email = profile.emails?.[0]?.value;
-
     if (!email) {
       throw new Error('No email found in the user profile');
     }
@@ -29,6 +28,7 @@ export class UsersService {
         provider,
         username: profile.displayName || profile.name.givenName,
         email: email,
+        profileIcon: profile.photos?.[0]?.value || profile.avatar_url
       }
       user = this.usersRepository.create(User);
       await this.usersRepository.save(user);
@@ -87,7 +87,6 @@ export class UsersService {
 
     Object.assign(user, updateUserDto);
 
-    console.log(user, updateUserDto);
 
     return await this.usersRepository.save(user);
   }

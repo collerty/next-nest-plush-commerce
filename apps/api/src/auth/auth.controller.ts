@@ -6,11 +6,12 @@ import {SignUpDto} from './dto/sign-up.dto';
 import {Public} from './public.decorator';
 import {GoogleOauthGuard} from './guards/google-oauth.guard';
 import {GithubOauthGuard} from './guards/github-oauth.guard';
+import {ConfigService} from "@nestjs/config";
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {
+  constructor(private readonly authService: AuthService, private configService: ConfigService) {
   }
 
   @Public()
@@ -54,8 +55,9 @@ export class AuthController {
   })
   @ApiResponse({status: 401, description: 'Unauthorized.'})
   getProfile(@Req() req: any) {
-    console.log("requsted profile");
-    return req.user;
+    console.log("requested profile");
+    const {password, ...user} = req.user;
+    return user;
   }
 
   @Public()
@@ -66,7 +68,7 @@ export class AuthController {
     description: 'Successfully refreshed tokens.',
   })
   @ApiResponse({status: 401, description: 'Invalid or expired refresh token.'})
-  async refreshToken(@Body('refreshToken') refreshToken: string, @Res({ passthrough: true }) res: any) {
+  async refreshToken(@Body('refreshToken') refreshToken: string, @Res({passthrough: true}) res: any) {
     const newTokens = await this.authService.refreshTokens(refreshToken, res);
     return newTokens;
   }
@@ -87,7 +89,11 @@ export class AuthController {
   async googleAuthRedirect(@Req() req: any, @Res({passthrough: true}) res: any) {
     await this.authService.socialLogin(req.user, 'google', res);
 
-    const redirectUrl = 'http://localhost:3000/';
+    const redirectUrl = this.configService.get<string>(
+        'NEXT_URL_PRODUCTION',
+        'http://localhost:3000', // fallback to localhost if not set
+    );
+
     return res.redirect(redirectUrl);
   }
 
@@ -107,7 +113,11 @@ export class AuthController {
   async githubAuthRedirect(@Req() req: any, @Res() res: any) {
     await this.authService.socialLogin(req.user, 'github', res);
 
-    const redirectUrl = 'http://localhost:3000/';
+    const redirectUrl = this.configService.get<string>(
+        'NEXT_URL_PRODUCTION',
+        'http://localhost:3000', // fallback to localhost if not set
+    );
+
     return res.redirect(redirectUrl);
   }
 }

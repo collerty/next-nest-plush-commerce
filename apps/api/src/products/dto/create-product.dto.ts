@@ -30,7 +30,6 @@ export class CreateProductDto {
     isArray: true,
     required: false,
   })
-  @IsOptional()
   @IsArray()
   @ArrayMinSize(1)
   images: string[];

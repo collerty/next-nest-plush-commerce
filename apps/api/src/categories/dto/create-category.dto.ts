@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, ValidateNested } from "class-validator";
+import {IsArray, IsNotEmpty, IsOptional, ValidateNested} from "class-validator";
 import { Type } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { CreateProductDto } from "../../products/dto/create-product.dto";
@@ -14,6 +14,7 @@ export class CreateCategoryDto {
     required: false,
   })
   @IsArray()
+  @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => CreateProductDto)
   products: CreateProductDto[];
