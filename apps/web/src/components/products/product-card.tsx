@@ -5,6 +5,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {Product} from "@/lib/types";
+import {AddToCartButton} from "@/components/cart/cart";
 
 
 export function ProductCard({ product }: { product: Product }) {
@@ -40,9 +41,37 @@ export function ProductCard({ product }: { product: Product }) {
           </CardContent>
         </Link>
         <CardFooter className="p-4 pt-0">
-          <Button variant="outline" className="w-full">Add to Cart</Button>
+          {/*<Button variant="outline" className="w-full">Add to Cart</Button>*/}
+          <AddToCartButton product={product} variant={"outline"}/>
         </CardFooter>
       </Card>
   )
 }
 
+export function ProductCardSkeleton() {
+  return (
+      <Card className="group overflow-hidden transition-all hover:shadow-lg">
+        <div className="block">
+          <div className="relative aspect-square overflow-hidden bg-gray-200 animate-pulse"></div>
+          <CardContent className="p-4">
+            <div className="h-5 w-20 bg-gray-200 rounded mb-2 animate-pulse"></div>
+            <div className="h-6 w-3/4 bg-gray-200 rounded mt-0.5 mb-1.5 animate-pulse"></div>
+            <div className="flex items-center mb-2">
+              {[...Array(5)].map((_, i) => (
+                  <div
+                      key={i}
+                      className="w-4 h-4 bg-gray-200 rounded-full animate-pulse"
+                  ></div>
+              ))}
+              <span className="h-4 w-8 bg-gray-200 rounded ml-1 animate-pulse"></span>
+            </div>
+            <div className="h-6 mt-0.5 mb-0.5 w-1/3 bg-gray-200 rounded animate-pulse"></div>
+          </CardContent>
+        </div>
+        <CardFooter className="p-4 pt-0">
+          <div className="h-10 bg-gray-200 rounded w-full animate-pulse"></div>
+        </CardFooter>
+      </Card>
+
+  )
+}
