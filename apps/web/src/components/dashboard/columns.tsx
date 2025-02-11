@@ -5,6 +5,7 @@ import { ColumnDef } from '@tanstack/react-table'
 // import { formatDate } from '@/lib/utils'
 import { CellAction } from './cell-action'
 import {formatDate} from "@/lib/utils";
+import {Product} from "@/lib/types";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -12,13 +13,13 @@ export type ProductColumn = {
   id: string
   price: string
   name: string
-  slug: string
+  // slug: string
   storeId: string
   category: string
   created_at: Date
 }
 
-export const columns: ColumnDef<ProductColumn>[] = [
+export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -29,7 +30,10 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: 'category',
     header: 'Category',
-    cell: ({ cell }) => cell.getValue().name
+    cell: ({ cell }) => {
+      const category = cell.getValue() as { name: string };
+      return category?.name ?? 'Unknown';
+    }
   },
   {
     accessorKey: 'price',

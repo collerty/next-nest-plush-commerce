@@ -10,9 +10,10 @@ import { toast } from 'sonner';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import {deleteProduct} from "@/lib/actions";
+import {Product} from "@/lib/types";
 
 interface CellActionProps {
-  data: ProductColumn;
+  data: Product;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {

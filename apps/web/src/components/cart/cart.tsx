@@ -64,14 +64,14 @@ export const useCartStore = create<CartStore>()(
 
 interface CartProps {
   setIsCartOpen: (isOpen: boolean) => void;
-  user: User;
+  user: User | null;
 }
 
 export default function Cart({setIsCartOpen, user}: CartProps) {
   const {products: cartItems, removeProduct: removeItem} = useCartStore();
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
-  function handleEmptyCartClick(e) {
+  function handleEmptyCartClick(e: React.MouseEvent<HTMLElement>) {
     if (cartItems.length === 0) {
     toast.error("Cart is empty");
     //   toast({
@@ -165,7 +165,7 @@ export default function Cart({setIsCartOpen, user}: CartProps) {
   )
 }
 
-export function CartButton({user}: { user: User }) {
+export function CartButton({user}: { user: User | null }) {
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const {products} = useCartStore();
   return (

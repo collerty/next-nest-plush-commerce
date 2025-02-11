@@ -43,24 +43,40 @@ const ALLOWED_IMAGE_TYPES = [
 const formSchema = z.object({
   name: z.string().min(1).max(255),
   description: z.string().min(1).max(255),
-  price: z.coerce.number().gte(1).lte(9999999),
+    price: z
+        .string()
+        .min(1, 'cannot be empty')
+        .default('')
+        .refine(
+            (val) => !isNaN(Number(val)),
+            { message: 'Invalid price' }
+        )
+    ,
   categoryId: z.coerce.number().min(1),
-  images: z
-      .custom<FileList>((val) => val instanceof FileList, "Required")
-      .refine((files) => files.length > 0, `Required`)
-      .refine((files) => files.length <= 5, `Maximum of 5 images are allowed.`)
-      .refine(
-          (files) =>
-              Array.from(files).every((file) => file.size <= MAX_IMAGE_SIZE),
-          `Each file size should be less than 5 MB.`
-      )
-      .refine(
-          (files) =>
-              Array.from(files).every((file) =>
-                  ALLOWED_IMAGE_TYPES.includes(file.type)
-              ),
-          "Only these types are allowed .jpg, .jpeg, .png and .webp"
-      ),
+    images: z
+        .array(
+            z.union([
+                z.string().url(), // ✅ Supports existing image URLs
+                z.instanceof(File) // ✅ Supports new image uploads
+            ])
+        )
+        .min(1, "At least one image is required")
+        .max(5, "Maximum of 5 images are allowed")
+        .refine(
+            (images) =>
+                images.every((image) =>
+                    typeof image === "string" || image.size <= MAX_IMAGE_SIZE
+                ),
+            `Each file size should be less than 5 MB.`
+        )
+        .refine(
+            (images) =>
+                images.every(
+                    (image) =>
+                        typeof image === "string" || ALLOWED_IMAGE_TYPES.includes(image.type)
+                ),
+            "Only these types are allowed: .jpg, .jpeg, .png, .webp"
+        ),
 });
 
 const categories = [
@@ -93,8 +109,8 @@ export function AddProductForm() {
       name: "",
       description: "",
       price: "",
-      categoryId: "",
-      images: []
+      // categoryId: 11,
+      // images: []
     },
   })
 
@@ -104,7 +120,7 @@ export function AddProductForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-      let {images} = values;
+      const {images} = values;
       const formData = new FormData();
       if (images) {
         for (const image of images) {
@@ -122,7 +138,7 @@ export function AddProductForm() {
 
       toast.success('Product is created.');
       // router.push("/dashboard/products/");
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
       toast.error("Error!");
     } finally {
@@ -178,7 +194,9 @@ export function AddProductForm() {
                   <FormItem>
                     <FormLabel>Category</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange}
+                              // defaultValue={field.value}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select a Category"/>
                         </SelectTrigger>
@@ -220,7 +238,7 @@ export function AddProductForm() {
               render={({field: {onChange, value, ...field}}) => {
                 // Get current images value (always watched updated)
                 const images = form.watch("images");
-
+                console.log(images);
                 return (
                     <FormItem>
                       <FormLabel>Images</FormLabel>

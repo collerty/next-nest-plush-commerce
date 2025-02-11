@@ -1,5 +1,5 @@
 export interface Product {
-  id: string;
+  id: number;
   name: string;
   category: Category;
   price: number;
@@ -11,7 +11,7 @@ export interface Product {
 export interface AddProductDTO {
   name: string;
   categoryId: number;
-  price: number;
+  price: number | string;
   rating?: number;
   images: string[];
   description: string;

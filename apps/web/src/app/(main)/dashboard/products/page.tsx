@@ -16,7 +16,9 @@ export default async function ProductsPage() {
             <CardDescription>Manage and view your product inventory</CardDescription>
           </CardHeader>
           <CardContent>
+              {products.data &&
             <DataTable data={products.data} columns={columns} searchKey='name'/>
+              }
           </CardContent>
         </Card>
       </div>

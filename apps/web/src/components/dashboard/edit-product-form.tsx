@@ -114,7 +114,7 @@ export function EditProductForm({product} : {product: Product}) {
     try {
       setIsLoading(true);
       // console.log(values);
-      let {images} = values;
+      const {images} = values;
       const existingImages = images.filter((img) => typeof img === "string");
       const newImages = images.filter((img) => img instanceof File);
 
@@ -125,7 +125,11 @@ export function EditProductForm({product} : {product: Product}) {
         }
       }
       const uploadedImages = await uploadImages(formData);
-      const addProductDTO = {...values, images: [...uploadedImages.data, ...existingImages]};
+
+        const addProductDTO = {
+            ...values,
+            images: [...(uploadedImages?.data || []), ...(existingImages || [])]
+        };
 
       console.log(addProductDTO);
       const res = await updateProduct(addProductDTO, product.id);
@@ -136,7 +140,7 @@ export function EditProductForm({product} : {product: Product}) {
 
       toast.success('Product is updated.');
       // router.push("/dashboard/products/");
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
       toast.error("Error!");
     } finally {

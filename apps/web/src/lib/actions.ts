@@ -63,7 +63,7 @@ export async function getProfile(): Promise<ApiResponse<User>> {
 }
 
 export async function logout(): Promise<void> {
-  let redirectPath: string | null = null;
+  // let redirectPath: string | null = null;
 
   try {
     const {accessToken} = await getAuthTokens();
@@ -88,7 +88,7 @@ export async function logout(): Promise<void> {
   }
 }
 
-const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+const sleep = (delay: number) => new Promise((resolve) => setTimeout(resolve, delay))
 
 export async function getProductById(id: string): Promise<ApiResponse<Product>> {
   await sleep(4000);
@@ -107,6 +107,7 @@ export async function getProductById(id: string): Promise<ApiResponse<Product>> 
 
 export async function getAllProducts(): Promise<ApiResponse<Product[]>> {
   try {
+    // await sleep(5000);
     const data = await fetcher(`${apiUrl}/products`, {
       method: 'GET'
     });
@@ -121,6 +122,10 @@ export async function getAllProducts(): Promise<ApiResponse<Product[]>> {
 export async function addProduct(body: Partial<AddProductDTO>): Promise<ApiResponse<Product>> {
   try {
     console.log("adding product", {body});
+    body.price = Number(body.price);
+    if (isNaN(body.price)) {
+      throw new Error("Price is NaN")
+    }
     const data = await fetcher(`${apiUrl}/products`, {
       method: 'POST',
       body: JSON.stringify(body),
@@ -134,9 +139,13 @@ export async function addProduct(body: Partial<AddProductDTO>): Promise<ApiRespo
   }
 }
 
-export async function updateProduct(body: Partial<AddProductDTO>, productId): Promise<ApiResponse<Product>> {
+export async function updateProduct(body: Partial<AddProductDTO>, productId: number): Promise<ApiResponse<Product>> {
   try {
     console.log("editing product", {body});
+    body.price = Number(body.price);
+    if (isNaN(body.price)) {
+      throw new Error("Price is NaN")
+    }
     const data = await fetcher(`${apiUrl}/products/${productId}`, {
       method: 'PATCH',
       body: JSON.stringify(body),
@@ -151,7 +160,7 @@ export async function updateProduct(body: Partial<AddProductDTO>, productId): Pr
 }
 
 
-export async function deleteProduct(id) {
+export async function deleteProduct(id: number) {
   try {
     const data = await fetcher(`${apiUrl}/products/${id}`, {
       method: 'DELETE',
@@ -164,7 +173,7 @@ export async function deleteProduct(id) {
   }
 }
 
-export async function uploadImages(formData): Promise<ApiResponse<string[]>> {
+export async function uploadImages(formData: FormData): Promise<ApiResponse<string[]>> {
   try {
     if (formData.entries().next().done) {
       return {success: true, data: []};
@@ -188,10 +197,10 @@ export async function getAllCategories(): Promise<ApiResponse<Product[]>> {
     // const data = await fetcher(`${apiUrl}/categories`, {
     //   method: 'GET',
     // });
-    const data = await fetch(`${apiUrl}/categories`, {
+    const response = await fetch(`${apiUrl}/categories`, {
       method: 'GET',
     });
-
+    const data = await response.json();
     return {success: true, data: data};
     /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
   } catch (error: any) {
@@ -235,7 +244,7 @@ export async function getAllProfileOrders(): Promise<ApiResponse<Order[]>> {
 }
 
 
-export async function getOrder(id): Promise<ApiResponse<Order>> {
+export async function getOrder(id: string ): Promise<ApiResponse<Order>> {
   try {
     const data = await fetcher(`${apiUrl}/orders/${id}`, {
       method: 'GET',

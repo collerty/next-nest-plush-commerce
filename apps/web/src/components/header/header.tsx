@@ -142,7 +142,7 @@ export function NavigationMenuDemo() {
                 <ListItem href="/products" title="Products">
                   See all available products
                 </ListItem>
-                <ListItem href="/dashboard" title="Create Store">
+                <ListItem href="/dashboard" title="Create Product">
                   Create and publish your own plush
                 </ListItem>
               </ul>

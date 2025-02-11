@@ -1,7 +1,7 @@
 'use client'
 import {motion} from 'framer-motion'
 
-export default function Template({children}) {
+export default function Template({children}: {children: React.ReactNode}) {
   return (
       <motion.main
           initial={{ opacity: 0, y: 20, scale: 0.98 }}
