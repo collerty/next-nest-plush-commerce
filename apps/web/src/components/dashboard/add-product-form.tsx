@@ -30,6 +30,7 @@ import {
   SelectGroup,
   SelectValue
 } from "@/components/ui/select";
+import {categories} from "@/lib/categories";
 
 // Images
 const MAX_IMAGE_SIZE = 5242880; // 5 MB
@@ -78,29 +79,6 @@ const formSchema = z.object({
             "Only these types are allowed: .jpg, .jpeg, .png, .webp"
         ),
 });
-
-const categories = [
-  {
-    "id": 11,
-    "name": "Wildlife Animals"
-  },
-  {
-    "id": 12,
-    "name": "Fantasy Creatures"
-  },
-  {
-    "id": 13,
-    "name": "Aquatic Animals"
-  },
-  {
-    "id": 14,
-    "name": "Birds"
-  },
-  {
-    "id": 15,
-    "name": "Pets"
-  }
-]
 
 export function AddProductForm() {
   const form = useForm<z.infer<typeof formSchema>>({

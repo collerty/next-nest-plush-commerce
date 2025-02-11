@@ -13,7 +13,6 @@ import {ProductCardSkeleton} from "@/components/products/product-card";
 import {Suspense} from "react";
 
 export default async function Page() {
-  // const products: ApiResponse<Product[]> = await getAllProducts();
   return (
       <div className="">
           <Breadcrumb className="mb-4">

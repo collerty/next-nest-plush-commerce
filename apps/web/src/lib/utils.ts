@@ -12,3 +12,8 @@ export function formatDate(date: Date | string | number) {
     year: 'numeric',
   }).format(new Date(date))
 }
+
+export const unslugify = (slug: string) => slug.replace(/\-/g, " ")
+    .replace(/\w\S*/g,
+        (text:string) => text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
+    );
