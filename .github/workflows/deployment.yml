@@ -2,7 +2,7 @@
 #
 #on:
 #  push:
-#    branches: [main]  # This triggers the workflow on pushes to the master branch.
+#    branches: [home]  # This triggers the workflow on pushes to the master branch.
 #
 #jobs:
 #  build:
@@ -46,9 +46,9 @@
 #        run: |
 #          ssh -o StrictHostKeyChecking=no -i private_key ${USERNAME}@${HOSTNAME} '
 #            cd /next-nest-plush-commerce/apps/api &&
-#            git checkout main &&
+#            git checkout home &&
 #            git fetch --all &&
-#            git reset --hard origin/main &&
-#            git pull origin main &&
+#            git reset --hard origin/home &&
+#            git pull origin home &&
 #            docker compose up -d --build
 #          '

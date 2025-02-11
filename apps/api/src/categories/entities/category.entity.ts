@@ -12,6 +12,10 @@ export class Category {
   @Column({ unique: true })
   name: string;
 
+  @ApiProperty({ description: 'Slug of the category' })
+  @Column({ unique: true })
+  slug: string;
+
   @ApiProperty({ description: 'List of products in this category' })
   @OneToMany(() => Product, (product) => product.category, { cascade: true })
   products: Product[];
