@@ -1,9 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import {UpdateProductDto} from "./dto/update-product.dto";
-import {CreateProductDto} from "./dto/create-product.dto";
-import {ProductsService} from "./products.service";
-import {Public} from "../auth/public.decorator";
+import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
+import { ProductsService } from './products.service';
+import { Public } from '../auth/public.decorator';
 
 @ApiTags('Products')
 @Controller('products')
@@ -15,7 +23,7 @@ export class ProductsController {
   @ApiResponse({ status: 201, description: 'Product created successfully.' })
   @ApiResponse({ status: 400, description: 'Invalid input data.' })
   create(@Body() createProductDto: CreateProductDto) {
-    console.log("adding product", createProductDto)
+    console.log('adding product', createProductDto);
     return this.productService.create(createProductDto);
   }
 
@@ -30,9 +38,34 @@ export class ProductsController {
   @Public()
   @Get('category/:id')
   @ApiOperation({ summary: 'Get products by category ID' })
-  @ApiResponse({ status: 200, description: 'Returns a list of products in the specified category.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns a list of products in the specified category.',
+  })
   findAllByCategory(@Param('id') id: number) {
     return this.productService.findAllByCategory(id);
+  }
+
+  @Public()
+  @Get('category/slug/:slug')
+  @ApiOperation({ summary: 'Get products by category ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns a list of products in the specified category.',
+  })
+  findAllByCategorySlug(@Param('slug') slug: string) {
+    return this.productService.findAllByCategorySlug(slug);
+  }
+
+  @Public()
+  @Get('category/count/:id')
+  @ApiOperation({ summary: 'Get count of the products by category ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns a number of products in the specified category.',
+  })
+  countByCategory(@Param('id') id: number) {
+    return this.productService.countByCategory(id);
   }
 
   @Public()
