@@ -106,12 +106,16 @@ export class AuthService {
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: true,
+      sameSite: 'None',
+      domain: this.configService.get<string>('COOKIE_DOMAIN'),
       maxAge: 60 * 60 * 1000, // 1 hour
     });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
+      sameSite: 'None',
+      domain: this.configService.get<string>('COOKIE_DOMAIN'),
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
     return {
@@ -155,12 +159,16 @@ export class AuthService {
       res.cookie('accessToken', newAccessToken, {
         httpOnly: true,
         secure: true,
+        sameSite: 'None',
+        domain: this.configService.get<string>('COOKIE_DOMAIN'),
         maxAge: 60 * 60 * 1000, // 1 hour
       });
 
       res.cookie('refreshToken', newRefreshToken, {
         httpOnly: true,
         secure: true,
+        sameSite: 'None',
+        domain: this.configService.get<string>('COOKIE_DOMAIN'),
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
       return {
