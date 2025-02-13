@@ -91,8 +91,9 @@ export class AuthController {
 
     const redirectUrl = this.configService.get<string>(
         'NEXT_URL_PRODUCTION',
-        'http://localhost:3000', // fallback to localhost if not set
+        'http://localhost:3002', // fallback to localhost if not set
     );
+
 
     return res.redirect(redirectUrl);
   }

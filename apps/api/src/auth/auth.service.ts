@@ -4,12 +4,14 @@ import {JwtService} from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import {User} from "../users/entities/user.entity";
+import {ConfigService} from "@nestjs/config";
 
 @Injectable()
 export class AuthService {
   constructor(
       private usersService: UsersService,
-      private jwtService: JwtService
+      private jwtService: JwtService,
+      private configService: ConfigService
   ) {
   }
 
@@ -36,12 +38,16 @@ export class AuthService {
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: true,
+      sameSite: 'None',
+      domain: this.configService.get<string>('COOKIE_DOMAIN'),
       maxAge: 60 * 60 * 1000, // 1 hour
     });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
+      sameSite: 'None',
+      domain: this.configService.get<string>('COOKIE_DOMAIN'),
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 
@@ -72,12 +78,16 @@ export class AuthService {
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: true,
+      sameSite: 'None',
+      domain: this.configService.get<string>('COOKIE_DOMAIN'),
       maxAge: 60 * 60 * 1000, // 1 hour
     });
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: true,
+      sameSite: 'None',
+      domain: this.configService.get<string>('COOKIE_DOMAIN'),
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
 

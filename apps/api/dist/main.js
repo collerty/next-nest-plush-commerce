@@ -11,7 +11,7 @@ const get_body_parser_options_util_1 = require("@nestjs/platform-express/adapter
 const express_1 = require("express");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, {
-        rawBody: false
+        rawBody: false,
     });
     app.use((0, body_parser_1.json)((0, get_body_parser_options_util_1.getBodyParserOptions)(true, { limit: '50mb' })));
     app.use((0, express_1.urlencoded)((0, get_body_parser_options_util_1.getBodyParserOptions)(true, { limit: '50mb' })));
@@ -23,6 +23,10 @@ async function bootstrap() {
         transform: true,
     }));
     const configService = app.get(config_1.ConfigService);
+    app.enableCors({
+        credentials: true,
+        origin: configService.get('NEXT_URL_PRODUCTION'),
+    });
     const PORT = configService.get('PORT') || 4000;
     await app.listen(PORT);
 }

@@ -9,6 +9,7 @@ export async function fetcher(url: string, options: any = {}) {
   const headers = {
     Authorization: accessToken ? `Bearer ${accessToken.value}` : undefined,
     ...options,
+    credentials: 'include',
   };
 
   console.log(url, headers);
