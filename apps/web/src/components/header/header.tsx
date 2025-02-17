@@ -21,7 +21,7 @@ import {CartButton} from "@/components/cart/cart";
 export function Header() {
   const {user, loading} = useUser();
   return (
-      <div className="w-full py-4 border-b flex gap-8 px-10 lg:px-20 xl:px-40">
+      <div className="w-full py-4 border-b flex gap-8 px-10 lg:px-20 xl:px-40 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
         <Logo/>
         <NavigationMenuDemo/>
         <div className="w-full flex justify-end items-center gap-4">
