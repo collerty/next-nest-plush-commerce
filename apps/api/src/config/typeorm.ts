@@ -18,7 +18,8 @@ const config = {
   migrations: ["dist/migrations/*{.ts,.js}"],
   entities: [User, Product, Order, OrderItem, Category],
   // migrations: ['/../migrations/*{.ts,.js}'],
-  synchronize: process.env.DEVELOPMENT, // Disable synchronize in production
+  synchronize: false,
+  // synchronize: process.env.DEVELOPMENT, // Disable synchronize in production
 };
 
 export default registerAs('typeorm', () => config);
