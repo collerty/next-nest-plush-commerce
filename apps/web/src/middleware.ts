@@ -10,13 +10,13 @@ export async function middleware(request: NextRequest) {
     console.log("middleware tokens", {accessToken, refreshToken});
 
     if (!refreshToken || !accessToken) {
-      return NextResponse.redirect(new URL('/auth', request.url));
+      return NextResponse.redirect(new URL('/auth/sign-in', request.url));
     }
 
 
   } catch (err) {
     console.log(err)
-    return NextResponse.redirect(new URL('/auth', request.url));
+    return NextResponse.redirect(new URL('/auth/sign-in', request.url));
   }
 
   return NextResponse.next();
