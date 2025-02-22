@@ -20,9 +20,9 @@ export default function RootLayout({
   return (
       <html lang="en" className="h-full">
       <body className={clsx(GeistSans.className, "flex flex-col w-full h-full")}>
-      <div>
+      {/*<div>*/}
         {children}
-      </div>
+      {/*</div>*/}
       <Toaster position={'bottom-left'}/>
       </body>
       </html>

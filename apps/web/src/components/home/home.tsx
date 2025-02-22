@@ -13,11 +13,11 @@ import {FeaturedProductsSection} from "@/components/home/featured-products-secti
 // ] as const;
 export function Home() {
     return (
-        <div className="w-full h-full flex flex-col">
+        <div className="w-full flex flex-col">
             {/*{sections.map((section: React.ReactNode) => section)}*/}
             <HeroSection/>
-            <CategoriesSection/>
             <FeaturedProductsSection/>
+            <CategoriesSection/>
         </div>
     )
 }
