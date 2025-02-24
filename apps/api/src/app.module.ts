@@ -38,7 +38,7 @@ import {StripeModule} from './stripe/stripe.module';
     CategoriesModule,
     OrdersModule,
     UploadModule,
-    StripeModule
+    StripeModule,
   ],
   controllers: [AppController],
   providers: [AppService, CloudinaryConfigService],

@@ -57,7 +57,7 @@ exports.AppModule = AppModule = __decorate([
             categories_module_1.CategoriesModule,
             orders_module_1.OrdersModule,
             upload_module_1.UploadModule,
-            stripe_module_1.StripeModule
+            stripe_module_1.StripeModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, cloudinary_config_1.CloudinaryConfigService],

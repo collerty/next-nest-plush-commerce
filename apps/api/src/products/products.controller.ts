@@ -5,7 +5,7 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
+  Delete, Req, HttpStatus, HttpException,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -22,9 +22,10 @@ export class ProductsController {
   @ApiOperation({ summary: 'Create a new product' })
   @ApiResponse({ status: 201, description: 'Product created successfully.' })
   @ApiResponse({ status: 400, description: 'Invalid input data.' })
-  create(@Body() createProductDto: CreateProductDto) {
+  create(@Req() req: any, @Body() createProductDto: CreateProductDto) {
     console.log('adding product', createProductDto);
-    return this.productService.create(createProductDto);
+    const userId: number = req.user.id;
+    return this.productService.create(createProductDto, userId);
   }
 
   @Public()
@@ -33,6 +34,14 @@ export class ProductsController {
   @ApiResponse({ status: 200, description: 'Returns a list of all products.' })
   findAll() {
     return this.productService.findAll();
+  }
+
+  @Get('user')
+  @ApiOperation({ summary: 'Get all products' })
+  @ApiResponse({ status: 200, description: 'Returns a list of all products.' })
+  findAllByUser(@Req() req: any) {
+    const userId = req.user.id;
+    return this.productService.findAllByUserId(userId);
   }
 
   @Public()
