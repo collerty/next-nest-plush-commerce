@@ -53,9 +53,10 @@ export const Footer = ({
                          {
                              title: "Social",
                              links: [
-                                 { text: "Twitter", url: "#" },
-                                 { text: "Instagram", url: "#" },
+                                 { text: "Github", url: "#" },
+                                 { text: "Discord", url: "#" },
                                  { text: "LinkedIn", url: "#" },
+                                 { text: "Telegram", url: "#" },
                              ],
                          },
                          {
@@ -75,19 +76,17 @@ export const Footer = ({
                  }: FooterProps) => {
     return (
         <section className="py-16 px-10 lg:px-20 xl:px-40">
-            <div className="container p-0 border-t border-grid pt-24" >
+            <div className="border-t border-grid pt-24 w-full">
                 <footer>
                     <div className="grid grid-cols-2 gap-8 lg:grid-cols-6">
                         <div className="col-span-2 mb-8 lg:mb-0">
                             <div className="flex items-center gap-2 lg:justify-start">
-                                <a href="https://shadcnblocks.com">
                                     <img
                                         src={logo.src}
                                         alt={logo.alt}
                                         title={logo.title}
                                         className="h-10"
                                     />
-                                </a>
                                 <p className="text-xl font-semibold">{logo.title}</p>
                             </div>
                             <p className="mt-4 font-bold">{tagline}</p>

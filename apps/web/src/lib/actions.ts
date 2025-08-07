@@ -108,7 +108,7 @@ export async function getProductById(id: string): Promise<ApiResponse<Product>> 
 export async function getAllProducts(): Promise<ApiResponse<Product[]>> {
     try {
         // await sleep(5000);
-        const data = await fetcher(`${apiUrl}/products`, {
+        const data = await fetcher(`${apiUrl}/products/user`, {
             method: 'GET'
         });
 
