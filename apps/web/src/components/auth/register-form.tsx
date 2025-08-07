@@ -29,7 +29,7 @@ export function RegisterForm({
               <div className="grid gap-6">
                 <div className="flex flex-col gap-4">
                   <GithubButton text={"Login with Github"} apiUrl={apiUrl}/>
-                  <GoogleButton text={"Register with Google"} apiUrl={apiUrl}/>
+                  {/*<GoogleButton text={"Register with Google"} apiUrl={apiUrl}/>*/}
                 </div>
                 <div className="text-center text-sm">
                   Already have an account?{" "}
