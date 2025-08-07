@@ -1,10 +1,10 @@
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card"
 import {DataTable} from "@/components/dashboard/products-table";
 import {columns} from "@/components/dashboard/columns";
-import {getAllProducts} from "@/lib/actions";
+import {getAllProductsUser} from "@/lib/actions";
 
 export default async function ProductsPage() {
-  const products = await getAllProducts();
+  const products = await getAllProductsUser();
   return (
       <div className="flex flex-col gap-4">
         <div className="flex justify-between">

@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import {Button} from "@/components/ui/button";
+import {ApiResponse} from "@/lib/actions";
 
 type Product = {
     id: string
@@ -73,7 +74,10 @@ const secondRowProducts: Product[] = [
 ];
 
 
-export function FeaturedProductsSection() {
+export async function FeaturedProductsSection({getProducts}: { getProducts: () => Promise<ApiResponse<Product[]>> }) {
+    const response = await getProducts();
+    const products = response.data;
+    const fProducts = products?.slice(0, 4);
     return (
         <section className="w-full py-8 md:py-12 lg:py-24">
 
@@ -85,7 +89,7 @@ export function FeaturedProductsSection() {
                     Discover our most popular plush toys and bring home a new cuddly friend today.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {featuredProducts.map((product) => (
+                    {fProducts?.map((product) => (
                         <ProductCard key={product.id} product={product}/>
                     ))}
                 </div>
@@ -111,11 +115,12 @@ export function FeaturedProductsSection() {
 }
 
 function ProductCard({product}: { product: Product }) {
+    console.log(product);
     return (
         <div
             className="bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105">
             <Image
-                src={product.image || "/placeholder.svg"}
+                src={product.images[0] || "/placeholder.svg"}
                 alt={product.name}
                 width={300}
                 height={300}

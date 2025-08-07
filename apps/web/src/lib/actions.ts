@@ -108,7 +108,7 @@ export async function getProductById(id: string): Promise<ApiResponse<Product>> 
 export async function getAllProducts(): Promise<ApiResponse<Product[]>> {
     try {
         // await sleep(5000);
-        const data = await fetcher(`${apiUrl}/products/user`, {
+        const data = await fetcher(`${apiUrl}/products`, {
             method: 'GET'
         });
 
@@ -119,6 +119,19 @@ export async function getAllProducts(): Promise<ApiResponse<Product[]>> {
     }
 }
 
+export async function getAllProductsUser(): Promise<ApiResponse<Product[]>> {
+    try {
+        // await sleep(5000);
+        const data = await fetcher(`${apiUrl}/products/user`, {
+            method: 'GET'
+        });
+
+        return {success: true, data: data};
+        /* eslint-disable-next-line  @typescript-eslint/no-explicit-any */
+    } catch (error: any) {
+        return {success: false, error: error};
+    }
+}
 export async function addProduct(body: Partial<AddProductDTO>): Promise<ApiResponse<Product>> {
     try {
         console.log("adding product", {body});
