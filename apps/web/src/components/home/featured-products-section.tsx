@@ -114,7 +114,7 @@ export async function FeaturedProductsSection({getProducts}: { getProducts: () =
     )
 }
 
-function ProductCard({product}: { product: Product }) {
+function ProductCard({product}: { product: any }) {
     console.log(product);
     return (
         <div
