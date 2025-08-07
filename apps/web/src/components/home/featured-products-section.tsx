@@ -2,76 +2,8 @@ import Image from "next/image"
 import Link from "next/link"
 import {Button} from "@/components/ui/button";
 import {ApiResponse} from "@/lib/actions";
+import {Product} from "@/lib/types";
 
-type Product = {
-    id: string
-    name: string
-    description: string
-    price: number
-    image: string
-}
-
-const featuredProducts: Product[] = [
-    {
-        id: "1",
-        name: "Cuddly Bear",
-        description: "A soft and huggable teddy bear, perfect for all ages.",
-        price: 24.99,
-        image: "/placeholder.svg",
-    },
-    {
-        id: "2",
-        name: "Sleepy Sloth",
-        description: "This adorable sloth plush will make you want to take a nap.",
-        price: 29.99,
-        image: "/placeholder.svg",
-    },
-    {
-        id: "3",
-        name: "Playful Penguin",
-        description: "A charming penguin plush that brings arctic joy to your home.",
-        price: 19.99,
-        image: "/placeholder.svg",
-    },
-    {
-        id: "4",
-        name: "Friendly Fox",
-        description: "A clever and cute fox plush to keep you company.",
-        price: 22.99,
-        image: "/placeholder.svg",
-    },
-]
-
-const secondRowProducts: Product[] = [
-    {
-        id: "5",
-        name: "Happy Hedgehog",
-        description: "A spiky yet snuggly friend for your collection.",
-        price: 21.99,
-        image: "/placeholder.svg"
-    },
-    {
-        id: "6",
-        name: "Bouncy Bunny",
-        description: "This playful bunny will hop right into your heart.",
-        price: 25.99,
-        image: "/placeholder.svg"
-    },
-    {
-        id: "7",
-        name: "Gentle Giraffe",
-        description: "A tall and cuddly giraffe for endless hugs.",
-        price: 27.99,
-        image: "/placeholder.svg"
-    },
-    {
-        id: "8",
-        name: "Cheerful Chick",
-        description: "A tiny but adorable chick to brighten your day.",
-        price: 18.99,
-        image: "/placeholder.svg"
-    },
-];
 
 
 export async function FeaturedProductsSection({getProducts}: { getProducts: () => Promise<ApiResponse<Product[]>> }) {
@@ -89,7 +21,7 @@ export async function FeaturedProductsSection({getProducts}: { getProducts: () =
                     Discover our most popular plush toys and bring home a new cuddly friend today.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {fProducts?.map((product) => (
+                    {fProducts?.map((product, index) => (
                         <ProductCard key={product.id} product={product}/>
                     ))}
                 </div>
